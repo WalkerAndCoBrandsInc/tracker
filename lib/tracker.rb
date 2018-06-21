@@ -1,5 +1,5 @@
 require "tracker/version"
+require "tracker/middleware"
 
 module Tracker
-  # Your code goes here...
 end

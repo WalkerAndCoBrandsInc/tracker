@@ -17,6 +17,30 @@ Or install it yourself as:
 
 ## Usage
 
+* use as middleware
+
+```ruby
+config.middleware.use(Tracker) do
+  handlers << Tracker::GoogleAnalytics.new(api_key: "")
+  handlers << Tracker::Amplitude.new(api_key: "")
+  handlers << Tracker::Ahoy.new(api_key: "")
+
+  queuer << Tracker::SidekiqWorker
+end
+
+class Tracker::SidekiqWorker
+  def perform(*params)
+  end
+end
+
+Tracker.queue do |t|
+  t.page "/path", params
+  t.event "event_name", params
+  t.event Tracker::ADD_PRODUCT_NAME, params
+  t.event Tracker::TRANSATION, params
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
