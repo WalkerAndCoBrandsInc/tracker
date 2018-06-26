@@ -20,12 +20,12 @@ Or install it yourself as:
 * use as middleware
 
 ```ruby
-config.middleware.use(Tracker) do
+config.middleware.use(Tracker::Middleware) do
   handler Tracker::GoogleAnalytics, { api_key: "" }
   handler Tracker::Amplitude, { api_key: "" }
   handler Tracker::Ahoy, { api_key: "" }
 
-  queuer < Tracker::SidekiqWorker
+  queuer Tracker::SidekiqWorker
 
   uuid do |env|
     env["UUID"]
