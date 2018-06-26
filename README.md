@@ -21,11 +21,15 @@ Or install it yourself as:
 
 ```ruby
 config.middleware.use(Tracker) do
-  handlers << Tracker::GoogleAnalytics.new(api_key: "")
-  handlers << Tracker::Amplitude.new(api_key: "")
-  handlers << Tracker::Ahoy.new(api_key: "")
+  handler Tracker::GoogleAnalytics, { api_key: "" }
+  handler Tracker::Amplitude, { api_key: "" }
+  handler Tracker::Ahoy, { api_key: "" }
 
-  queuer << Tracker::SidekiqWorker
+  queuer < Tracker::SidekiqWorker
+
+  uuid do |env|
+    env["UUID"]
+  end
 end
 
 class Tracker::SidekiqWorker
