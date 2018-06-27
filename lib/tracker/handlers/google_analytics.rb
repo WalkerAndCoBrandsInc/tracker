@@ -1,7 +1,7 @@
 require "staccato"
 require_relative "./base"
 
-class Tracker::Handlers::GoogleAnalytics
+module Tracker::Handlers::GoogleAnalytics
   class Queuer < Tracker::Handlers::Base
 
     # Accepts:
