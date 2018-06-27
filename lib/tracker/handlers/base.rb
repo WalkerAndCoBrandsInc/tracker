@@ -1,23 +1,15 @@
 class Tracker::Handlers::Base
   class NotImplemented < StandardError; end
 
+  attr_reader :api_key, :env, :uuid
+
   # Accepts:
-  #   api_key - String
-  def initalize(api_key:)
+  #   api_key      - String
+  #   env          - Hash
+  #   uuid_fetcher - Proc, should return String/int UUID of user.
+  def initialize(api_key:, env:, uuid_fetcher:)
     @api_key = api_key
-  end
-
-  # Accepts:
-  #   path   - String
-  #   params - (Optional) Hash
-  def page(path:, params:{})
-    raise NotImplemented
-  end
-
-  # Accepts:
-  #   name   - String
-  #   params - (Optional) Hash
-  def event(name:, params:{})
-    raise NotImplemented
+    @env     = env
+    @uuid    = uuid_fetcher.call(env)
   end
 end
