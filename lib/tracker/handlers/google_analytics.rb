@@ -7,6 +7,7 @@ class Tracker::Handlers::GoogleAnalytics
     # Accepts:
     #   path      - String
     #   page_args - Hash, optional
+    #
     # Returns:
     #   Hash
     def page(path, page_args = {})
@@ -22,6 +23,7 @@ class Tracker::Handlers::GoogleAnalytics
     # Accepts:
     #   name       - String
     #   event_args - Hash, optional
+    #
     # Returns:
     #   Hash
     def event(name, event_args = {})
@@ -55,7 +57,7 @@ class Tracker::Handlers::GoogleAnalytics
     # Returns:
     #   Hash
     def client_args
-      {uuid: uuid, api_key: api_key }
+      { uuid: uuid, api_key: api_key }
     end
   end
 
@@ -65,7 +67,7 @@ class Tracker::Handlers::GoogleAnalytics
       #   path        - String
       #   client_args - Hash
       #   page_args   - Hash, optional
-      def page(path:, client_args:, page_args:{})
+      def page(path:, client_args:, page_args: {})
         client(client_args).pageview(page_args.merge(path: path))
       end
 
@@ -77,7 +79,7 @@ class Tracker::Handlers::GoogleAnalytics
       #     action   - String
       #     label    - String
       #     value    - String
-      def event(name:, client_args:, page_args:{})
+      def event(name:, client_args:, page_args: {})
         client(client_args).event(page_args.merge(action: name))
       end
 
