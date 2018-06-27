@@ -22,16 +22,18 @@ RSpec.describe Tracker::Controller do
     context "controller" do
       subject { app }
 
-      it do
+      it "queues given block" do
         expect(Tracker::Background::Sidekiq).to receive(:queue).with({
-          path:"/path",
-          client_args: {uuid:"1", api_key:"api_key"},
-          page_args: {
-            aip:        true,
-            path:       "/",
-            hostname:   "example.org",
-            user_agent: nil,
-            a:          1
+          page: {
+            path:"/path",
+            client_args: {uuid:"1", api_key:"api_key"},
+            page_args: {
+              aip:        true,
+              path:       "/",
+              hostname:   "example.org",
+              user_agent: nil,
+              a:          1
+            }
           }
         })
 

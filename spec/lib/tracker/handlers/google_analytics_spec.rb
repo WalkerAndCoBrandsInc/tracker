@@ -18,14 +18,16 @@ describe "GoogleAnalytics" do
   describe "Queuer" do
     it "builds pageview with given and default args" do
       expect(queuer.page("/", {a: 1})).to eq({
-        path:"/",
-        client_args:{uuid:"1", api_key:"api_key"},
-        page_args:{
-          aip:        true,
-          path:       "/",
-          user_agent: env["HTTP_USER_AGENT"],
-          hostname:   env["HTTP_HOST"],
-          a:          1
+        page: {
+          path:"/",
+          client_args:{uuid:"1", api_key:"api_key"},
+          page_args:{
+            aip:        true,
+            path:       "/",
+            user_agent: env["HTTP_USER_AGENT"],
+            hostname:   env["HTTP_HOST"],
+            a:          1
+          }
         }
       })
     end
@@ -34,15 +36,17 @@ describe "GoogleAnalytics" do
       expect(queuer.event(
         "event name", {category: "category", label: "label", value: 1})
       ).to eq({
-        name: "event name",
-        client_args: {uuid:"1", api_key:"api_key"},
-        page_args: {
-          aip:true,
-          path:"/",
-          hostname: env["HTTP_HOST"],
-          user_agent: env["HTTP_USER_AGENT"],
-          category:"category",
-          label:"label", value:1
+        event: {
+          name: "event name",
+          client_args: {uuid:"1", api_key:"api_key"},
+          page_args: {
+            aip:true,
+            path:"/",
+            hostname: env["HTTP_HOST"],
+            user_agent: env["HTTP_USER_AGENT"],
+            category:"category",
+            label:"label", value:1
+          }
         }
       })
     end
@@ -55,7 +59,7 @@ describe "GoogleAnalytics" do
       expect(Staccato).to receive(:tracker).with("api_key", "1", ssl:true).
         and_return(double(pageview: nil))
 
-      subject.page(queuer.page("/", {a: 1}))
+      subject.page(queuer.page("/", {a: 1})[:page])
     end
 
     it "tracks pageview with given and default params" do
@@ -68,7 +72,7 @@ describe "GoogleAnalytics" do
         user_agent: env["HTTP_USER_AGENT"],
       })
 
-      subject.page(queuer.page("/", {a: 1}))
+      subject.page(queuer.page("/", {a: 1})[:page])
     end
 
     it "tracks event with given and default params" do
@@ -86,7 +90,7 @@ describe "GoogleAnalytics" do
       subject.event(
         queuer.event("event name", {
           category: "category", label: "label", value: 1
-        })
+        })[:event]
       )
     end
   end

@@ -11,9 +11,11 @@ class Tracker::Handlers::GoogleAnalytics
     #   Hash
     def page(path, page_args = {})
       {
-        path:        path,
-        client_args: client_args,
-        page_args:   default_args.merge(page_args)
+        page: {
+          path:        path,
+          client_args: client_args,
+          page_args:   default_args.merge(page_args)
+        }
       }
     end
 
@@ -24,9 +26,11 @@ class Tracker::Handlers::GoogleAnalytics
     #   Hash
     def event(name, event_args = {})
       {
-        name:        name,
-        client_args: client_args,
-        page_args:   default_args.merge(event_args)
+        event: {
+          name:        name,
+          client_args: client_args,
+          page_args:   default_args.merge(event_args)
+        }
       }
     end
 

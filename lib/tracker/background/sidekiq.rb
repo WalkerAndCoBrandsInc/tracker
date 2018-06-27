@@ -9,11 +9,9 @@ class Tracker::Background::Sidekiq < Tracker::Background::Base
 
   # Accepts:
   #   klass_str       - String, one of Tracker::Handlers
-  #   tracker_actions - [ ]
+  #   tracker_actions - [{page: {}}, event: {}]
   def perform(klass_str, tracker_actions)
     klass = klass_str.constantize
-    tracker_actions.each do |method, args|
-      args.each { |a| klass.send(method, *a) }
-    end
+    tracker_actions.each { |method, args| klass.send(method, args) }
   end
 end
