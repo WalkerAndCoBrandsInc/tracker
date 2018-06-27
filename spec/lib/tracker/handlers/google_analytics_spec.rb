@@ -62,7 +62,7 @@ describe "GoogleAnalytics" do
       subject.page(queuer.page("/", {a: 1})[:page])
     end
 
-    it "tracks pageview with given and default params" do
+    it "tracks pageview with given and default args" do
       expect_any_instance_of(Staccato::Tracker).to receive(:pageview).with({
         path:       "/",
         a:          1,
@@ -75,7 +75,7 @@ describe "GoogleAnalytics" do
       subject.page(queuer.page("/", {a: 1})[:page])
     end
 
-    it "tracks event with given and default params" do
+    it "tracks event with given and default args" do
       expect_any_instance_of(Staccato::Tracker).to receive(:event).with({
         aip:        true,
         hostname:   env["HTTP_HOST"],

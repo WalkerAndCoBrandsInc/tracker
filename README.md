@@ -1,5 +1,6 @@
 # Tracker
 
+Tracker is a gem for tracking events in Rails applications. It hooks in Rack to send page events automatically. Inspired by https://github.com/railslove/rack-tracker.
 
 ## Installation
 
@@ -20,28 +21,28 @@ Or install it yourself as:
 * use as middleware
 
 ```ruby
+# config/application.rb
 config.middleware.use(Tracker::Middleware) do
+  # register handlers
   handler Tracker::GoogleAnalytics, { api_key: "" }
+
+  # TODO
   handler Tracker::Amplitude, { api_key: "" }
   handler Tracker::Ahoy, { api_key: "" }
 
-  queuer Tracker::SidekiqWorker
+  # specify which background worker to use to async send events
+  queuer Tracker::Background::Sidekiq
 
+  # specify how to get UUID for user from env
   uuid do |env|
     env["UUID"]
   end
 end
 
-class Tracker::SidekiqWorker
-  def perform(*params)
-  end
-end
-
-Tracker.queue do |t|
-  t.page "/path", params
-  t.event "event_name", params
-  t.event Tracker::ADD_PRODUCT_NAME, params
-  t.event Tracker::TRANSATION, params
+# in a controller
+queue_tracker do |t|
+  t.page "/path", {a: 1}
+  t.event "event_name", {a: 2}
 end
 ```
 
@@ -53,7 +54,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/WalkerAndCoBrandsInc/ruby
+Bug reports and pull requests are welcome on GitHub at https://github.com/WalkerAndCoBrandsInc/tracker
 
 ## License
 
