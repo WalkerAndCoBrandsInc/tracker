@@ -25,10 +25,10 @@ Or install it yourself as:
 config.middleware.use(Tracker::Middleware) do
   # register handlers
   handler Tracker::GoogleAnalytics, { api_key: "" }
+  handler Tracker::Handlers::Ahoy, { api_key: "" }
 
   # TODO
   handler Tracker::Amplitude, { api_key: "" }
-  handler Tracker::Ahoy, { api_key: "" }
 
   # specify which background worker to use to async send events
   queuer Tracker::Background::Sidekiq
