@@ -42,9 +42,23 @@ RSpec.describe Tracker::Controller do
               }
             }
           }
-        )
+        ).and_call_original
+
+        expect(Tracker::Handlers::GoogleAnalytics::Client).to receive(:page).with({
+          path:"/path",
+          client_args: {uuid:"1", api_key:"api_key"},
+          page_args: {
+            aip:        true,
+            path:       "/",
+            hostname:   "example.org",
+            user_agent: nil,
+            a:          1
+          }
+        })
 
         get "/"
+
+        Tracker::Background::Sidekiq.drain
       end
     end
   end
