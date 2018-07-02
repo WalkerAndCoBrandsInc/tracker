@@ -24,7 +24,12 @@ Or install it yourself as:
 # config/application.rb
 config.middleware.use(Tracker::Middleware) do
   # register handlers
-  handler Tracker::GoogleAnalytics, { api_key: "" }
+  handler(
+    queue_class:  Tracker::GoogleAnalytics::Queuer,
+    client_class: Tracker::GoogleAnalytics::Client,
+    opts:         { api_key: "" }
+  )
+
   handler Tracker::Handlers::Ahoy, { api_key: "" }
 
   # TODO

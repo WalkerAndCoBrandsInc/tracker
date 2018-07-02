@@ -4,7 +4,11 @@ describe Tracker do
   def app
     Rack::Builder.new do
       use Tracker::Middleware do
-        handler Tracker::GoogleAnalytics, { api_key: "" }
+        handler(
+          queue_class:  Tracker::GoogleAnalytics::Queuer,
+          client_class: Tracker::GoogleAnalytics::Client,
+          opts:         { api_key: "" }
+        )
 
         queuer "QueurClassName"
         uuid do |env|

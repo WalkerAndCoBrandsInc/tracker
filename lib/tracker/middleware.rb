@@ -1,5 +1,5 @@
 module Tracker
-  DeferedInitializer = Struct.new(:klass, :opts)
+  DeferedInitializer = Struct.new(:queuer_class, :client_class, :opts)
 
   class Middleware
     attr_reader :app, :handlers
@@ -18,8 +18,8 @@ module Tracker
       app.call(env)
     end
 
-    def handler(klass, opts={})
-      @handlers << DeferedInitializer.new(klass, opts)
+    def handler(queue_class:, client_class:, opts: {})
+      @handlers << DeferedInitializer.new(queue_class, client_class, opts)
     end
 
     def queuer(q=nil)
