@@ -10,7 +10,7 @@ module Tracker::Handlers::GoogleAnalytics
     #
     # Returns:
     #   Hash
-    def page(path, page_args = {})
+    def page(path:, page_args: {})
       {
         page: {
           path:        path,
@@ -26,7 +26,7 @@ module Tracker::Handlers::GoogleAnalytics
     #
     # Returns:
     #   Hash
-    def event(name, event_args = {})
+    def event(name:, event_args: {})
       {
         event: {
           name:        name,

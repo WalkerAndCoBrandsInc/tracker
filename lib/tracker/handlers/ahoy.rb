@@ -9,7 +9,7 @@ module Tracker::Handlers::Ahoy
     #
     # Returns:
     #   Hash
-    def page(path, page_args = {})
+    def page(path:, page_args: {})
       { page: { path: path, page_args: page_args } }
     end
 
@@ -19,7 +19,7 @@ module Tracker::Handlers::Ahoy
     #
     # Returns:
     #   Hash
-    def event(name, event_args = {})
+    def event(name:, event_args: {})
       { event: { name: name, event_args: event_args } }
     end
   end

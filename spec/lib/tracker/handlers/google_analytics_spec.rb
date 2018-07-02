@@ -17,7 +17,7 @@ describe "GoogleAnalytics" do
 
   describe "Queuer" do
     it "builds pageview with given and default args" do
-      expect(queuer.page("/", {a: 1})).to eq({
+      expect(queuer.page(path: "/", page_args: {a: 1})).to eq({
         page: {
           path:"/",
           client_args:{uuid:"1", api_key:"api_key"},
@@ -34,7 +34,8 @@ describe "GoogleAnalytics" do
 
     it "builds event with given and default args" do
       expect(queuer.event(
-        "event name", {category: "category", label: "label", value: 1})
+        name: "event name",
+        event_args: {category: "category", label: "label", value: 1})
       ).to eq({
         event: {
           name: "event name",
@@ -59,7 +60,7 @@ describe "GoogleAnalytics" do
       expect(Staccato).to receive(:tracker).with("api_key", "1", ssl:true).
         and_return(double(pageview: nil))
 
-      subject.page(queuer.page("/", {a: 1})[:page])
+      subject.page(queuer.page(path: "/", page_args: {a: 1})[:page])
     end
 
     it "tracks pageview with given and default args" do
@@ -72,7 +73,7 @@ describe "GoogleAnalytics" do
         user_agent: env["HTTP_USER_AGENT"],
       })
 
-      subject.page(queuer.page("/", {a: 1})[:page])
+      subject.page(queuer.page(path: "/", page_args: {a: 1})[:page])
     end
 
     it "tracks event with given and default args" do
@@ -88,9 +89,10 @@ describe "GoogleAnalytics" do
       })
 
       subject.event(
-        queuer.event("event name", {
-          category: "category", label: "label", value: 1
-        })[:event]
+        queuer.event(
+          name: "event name",
+          event_args: {category: "category", label: "label", value: 1}
+        )[:event]
       )
     end
   end

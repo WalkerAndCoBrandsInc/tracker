@@ -7,13 +7,13 @@ describe "Ahoy" do
 
   describe "Queuer" do
     it "builds pageview with given args" do
-      expect(queuer.page("/", {a: 1})).to eq({
+      expect(queuer.page(path: "/", page_args: {a: 1})).to eq({
         page: { path: "/", page_args: { a: 1 }}
       })
     end
 
     it "builds event with given and default args" do
-      expect(queuer.event("event name", { a: 1 })).to eq({
+      expect(queuer.event(name: "event name", event_args: { a: 1 })).to eq({
         event: { name: "event name", event_args: { a: 1}}
       })
     end
@@ -26,7 +26,7 @@ describe "Ahoy" do
       expect_any_instance_of(Ahoy::Tracker).to receive(:track).
         with("Visited page", {:a=>1, :path=>"/"})
 
-      subject.page(queuer.page("/", {a: 1})[:page])
+      subject.page(queuer.page(path: "/", page_args: {a: 1})[:page])
     end
   end
 end

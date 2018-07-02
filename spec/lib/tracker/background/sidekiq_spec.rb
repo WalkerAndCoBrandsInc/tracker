@@ -16,12 +16,14 @@ module Tracker::Background
 
     it "calls client with args" do
       expect(Tracker::Handlers::GoogleAnalytics::Client).to receive(:page).with({
-        path:"/",
+        path:        "/",
         client_args: {uuid:"1", api_key:"api_key"},
-        page_args: {aip:true, path:nil, hostname:nil, user_agent:nil}}
+        page_args:   {aip:true, path:nil, hostname:nil, user_agent:nil}}
       )
 
-      subject.perform("Tracker::Handlers::GoogleAnalytics::Client", queuer.page("/"))
+      subject.perform(
+        "Tracker::Handlers::GoogleAnalytics::Client", queuer.page(path: "/")
+      )
     end
   end
 end

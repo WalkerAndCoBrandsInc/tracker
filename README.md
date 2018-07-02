@@ -46,8 +46,8 @@ end
 
 # in a controller
 queue_tracker do |t|
-  t.page "/path", {a: 1}
-  t.event "event_name", {a: 2}
+  t.page(path: "/path", page_args: {a: 1})
+  t.event(name: "event_name", event_args: {a: 2})
 end
 ```
 

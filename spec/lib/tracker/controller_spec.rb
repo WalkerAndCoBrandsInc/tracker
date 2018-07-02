@@ -28,8 +28,7 @@ RSpec.describe Tracker::Controller do
 
       it "queues given block" do
         expect(Tracker::Background::Sidekiq).to receive(:queue).with(
-          "Tracker::Handlers::GoogleAnalytics::Client",
-          {
+          "Tracker::Handlers::GoogleAnalytics::Client", {
             page: {
               path:"/path",
               client_args: {uuid:"1", api_key:"api_key"},
@@ -45,7 +44,7 @@ RSpec.describe Tracker::Controller do
         ).and_call_original
 
         expect(Tracker::Handlers::GoogleAnalytics::Client).to receive(:page).with({
-          path:"/path",
+          path: "/path",
           client_args: {uuid:"1", api_key:"api_key"},
           page_args: {
             aip:        true,
