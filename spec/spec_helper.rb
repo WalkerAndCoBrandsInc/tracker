@@ -40,6 +40,8 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 RSpec.configure do |config|
   config.include Rack::Test::Methods
+  config.include EnvHelpers
+  config.include App
 end
 
 VCR.configure do |config|

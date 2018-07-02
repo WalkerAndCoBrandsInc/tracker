@@ -8,7 +8,7 @@ module Tracker::Background
   describe Sidekiq do
     let(:queuer) do
       Tracker::Handlers::GoogleAnalytics::Queuer.new(
-        api_key: "api_key", env: {}, uuid_fetcher: proc { "1" }
+        api_key: "api_key", env: env, uuid_fetcher: proc { "1" }
       )
     end
 
@@ -18,7 +18,14 @@ module Tracker::Background
       expect(Tracker::Handlers::GoogleAnalytics::Client).to receive(:page).with({
         path:        "/",
         client_args: {uuid:"1", api_key:"api_key"},
-        page_args:   {aip:true, path:nil, hostname:nil, user_agent:nil}}
+        page_args:   {
+          aip:        true,
+          path:       "/",
+          hostname:   "localhost:3000",
+          user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6)",
+          user_id:    1,
+          uuid:       "1"
+        }}
       )
 
       subject.perform(

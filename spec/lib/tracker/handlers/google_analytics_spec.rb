@@ -1,14 +1,6 @@
 require "spec_helper"
 
 describe "GoogleAnalytics" do
-  let(:env) do
-    {
-      "HTTP_HOST"       => "localhost:3000",
-      "PATH_INFO"       => "/",
-      "HTTP_USER_AGENT" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6)"
-    }
-  end
-
   let(:queuer) do
     Tracker::Handlers::GoogleAnalytics::Queuer.new(
       api_key: "api_key", env: env, uuid_fetcher: proc { "1" }
@@ -26,7 +18,9 @@ describe "GoogleAnalytics" do
             path:       "/",
             user_agent: env["HTTP_USER_AGENT"],
             hostname:   env["HTTP_HOST"],
-            a:          1
+            a:          1,
+            uuid:       "1",
+            user_id:    1
           }
         }
       })
@@ -40,13 +34,15 @@ describe "GoogleAnalytics" do
         event: {
           name: "event name",
           client_args: {uuid:"1", api_key:"api_key"},
-          page_args: {
+          event_args: {
             aip:true,
             path:"/",
             hostname: env["HTTP_HOST"],
             user_agent: env["HTTP_USER_AGENT"],
             category:"category",
-            label:"label", value:1
+            label:"label", value:1,
+            uuid:       "1",
+            user_id:    1
           }
         }
       })
@@ -71,6 +67,8 @@ describe "GoogleAnalytics" do
         hostname:   env["HTTP_HOST"],
         path:       env["PATH_INFO"],
         user_agent: env["HTTP_USER_AGENT"],
+        uuid:       "1",
+        user_id:    1
       })
 
       subject.page(queuer.page(path: "/", page_args: {a: 1})[:page])
@@ -85,7 +83,9 @@ describe "GoogleAnalytics" do
         category:   "category",
         label:      "label",
         action:     "event name",
-        value:      1
+        value:      1,
+        uuid:       "1",
+        user_id:    1
       })
 
       subject.event(

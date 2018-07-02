@@ -12,4 +12,13 @@ class Tracker::Handlers::Base
     @env     = env
     @uuid    = uuid_fetcher.call(env)
   end
+
+  private
+
+  def default_args
+    {
+      uuid:    uuid,
+      user_id: env["rack.session"]["user_id"]
+    }
+  end
 end

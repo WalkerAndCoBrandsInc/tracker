@@ -1,3 +1,5 @@
+require_relative "./page_track"
+
 module Tracker
   DeferedInitializer = Struct.new(:queuer_class, :client_class, :opts)
 
@@ -15,6 +17,7 @@ module Tracker
 
     def call(env)
       env[KEY] = self
+      #track_page(env)
       app.call(env)
     end
 
@@ -30,6 +33,12 @@ module Tracker
     def uuid(&blk)
       return @uuid_fetcher if blk.nil?
       @uuid_fetcher = blk
+    end
+
+    private
+
+    def track_page(env)
+      PageTrack.new(env).track
     end
   end
 end
