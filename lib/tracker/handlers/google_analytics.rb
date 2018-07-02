@@ -63,6 +63,7 @@ module Tracker::Handlers::GoogleAnalytics
 
   class Client
     class << self
+
       # Accepts:
       #   path        - String
       #   client_args - Hash
