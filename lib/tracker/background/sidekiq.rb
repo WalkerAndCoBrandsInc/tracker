@@ -1,4 +1,5 @@
 require "active_support/inflections"
+require "active_support/core_ext/hash/keys"
 
 class Tracker::Background::Sidekiq < Tracker::Background::Base
   include ::Sidekiq::Worker
@@ -12,6 +13,8 @@ class Tracker::Background::Sidekiq < Tracker::Background::Base
   #   tracker_actions - [{page: {}}, event: {}]
   def perform(klass_str, tracker_actions)
     klass = klass_str.constantize
-    tracker_actions.each { |method, args| klass.send(method, args) }
+    tracker_actions.each do |method, args|
+      klass.send(method, args.deep_symbolize_keys)
+    end
   end
 end
