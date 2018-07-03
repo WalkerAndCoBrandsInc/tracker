@@ -32,7 +32,7 @@ class Tracker::Handlers::Base
   end
 
   def params
-    request.params
+    request.params.deep_symbolize_keys
   end
 
   def default_event_args

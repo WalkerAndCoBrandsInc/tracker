@@ -29,7 +29,9 @@ describe "Ahoy" do
         user_agent: env["HTTP_USER_AGENT"],
         host_name:  env["HTTP_HOST"],
         uuid:       "uuid",
-        user_id:    1
+        user_id:    1,
+        utm_param:  "2",
+        utm_source: "a"
       }
 
       expect_any_instance_of(Ahoy::Tracker).to receive(:track).
