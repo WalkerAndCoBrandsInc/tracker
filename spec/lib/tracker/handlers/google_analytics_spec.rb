@@ -3,7 +3,7 @@ require "spec_helper"
 describe "GoogleAnalytics" do
   let(:queuer) do
     Tracker::Handlers::GoogleAnalytics::Queuer.new(
-      api_key: "api_key", env: env, uuid_fetcher: proc { "uuid" }
+      api_key: "api_key", env: env, uuid_fetcher: uuid_fetcher
     )
   end
 

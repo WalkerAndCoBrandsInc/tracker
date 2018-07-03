@@ -28,9 +28,9 @@ class Tracker::Handlers::Base
 
   def default_args
     {
-      uuid:    uuid,
-      user_id: env["rack.session"]["user_id"],
-      host_name:  env["HTTP_HOST"]
+      uuid:      uuid,
+      user_id:   env["rack.session"]["user_id"],
+      host_name: env["HTTP_HOST"]
     }
   end
 end
