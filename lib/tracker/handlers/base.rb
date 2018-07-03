@@ -15,6 +15,14 @@ class Tracker::Handlers::Base
     @uuid    = uuid_fetcher.call(env)
   end
 
+  def page(*args)
+    raise NotImplemented
+  end
+
+  def event(*args)
+    raise NotImplemented
+  end
+
   private
 
   def default_page_args
