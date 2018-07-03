@@ -15,7 +15,7 @@ module Tracker::Handlers::GoogleAnalytics
         page: {
           path:        path,
           client_args: client_args,
-          page_args:   default_args.merge(page_args)
+          page_args:   default_page_args.merge(page_args)
         }
       }
     end
@@ -31,7 +31,7 @@ module Tracker::Handlers::GoogleAnalytics
         event: {
           name:        name,
           client_args: client_args,
-          event_args:  default_args.merge(event_args)
+          event_args:  default_event_args.merge(event_args)
         }
       }
     end
@@ -42,12 +42,17 @@ module Tracker::Handlers::GoogleAnalytics
     #
     # Returns:
     #   Hash
-    def default_args
-      super.merge({
+    def default_page_args
+      super.except(:host_name).merge({
         aip:        true, # anonymize ip
-        path:       env["PATH_INFO"],
-        hostname:   env["HTTP_HOST"],
-        user_agent: env["HTTP_USER_AGENT"]
+        hostname:   env["HTTP_HOST"]
+      })
+    end
+
+    def default_event_args
+      super.except(:host_name).merge({
+        aip:        true, # anonymize ip
+        hostname:   env["HTTP_HOST"]
       })
     end
 

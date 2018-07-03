@@ -8,7 +8,7 @@ class UUIDSetter
   end
 
   def call(env)
-    env[KEY] = "1"
+    env[KEY] = "uuid"
     env.merge!(rack_session)
 
     @app.call(env)

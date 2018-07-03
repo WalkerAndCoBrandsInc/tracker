@@ -2,19 +2,37 @@ require "spec_helper"
 
 describe "Ahoy" do
   let(:queuer) do
-    Tracker::Handlers::Ahoy::Queuer.new(env: {}, uuid_fetcher: proc { "1" })
+    Tracker::Handlers::Ahoy::Queuer.new(env: env, uuid_fetcher: proc { "uuid" })
   end
 
   describe "Queuer" do
     it "builds pageview with given args" do
       expect(queuer.page(path: "/", page_args: {a: 1})).to eq({
-        page: { path: "/", page_args: { a: 1 }}
+        page: {
+          path:        "/",
+          page_args:   {
+            a:          1,
+            path:       "/",
+            user_agent: env["HTTP_USER_AGENT"],
+            host_name:  env["HTTP_HOST"],
+            uuid:       "uuid",
+            user_id:    1
+          }
+        }
       })
     end
 
     it "builds event with given and default args" do
       expect(queuer.event(name: "event name", event_args: { a: 1 })).to eq({
-        event: { name: "event name", event_args: { a: 1}}
+        event: {
+          name:        "event name",
+          event_args: {
+            a:        1,
+            host_name: env["HTTP_HOST"],
+            uuid:     "uuid",
+            user_id:  1
+          }
+        }
       })
     end
   end

@@ -15,10 +15,22 @@ class Tracker::Handlers::Base
 
   private
 
+  def default_page_args
+    default_args.merge({
+      path:       env["PATH_INFO"],
+      user_agent: env["HTTP_USER_AGENT"]
+    })
+  end
+
+  def default_event_args
+    default_args.merge({})
+  end
+
   def default_args
     {
       uuid:    uuid,
-      user_id: env["rack.session"]["user_id"]
+      user_id: env["rack.session"]["user_id"],
+      host_name:  env["HTTP_HOST"]
     }
   end
 end

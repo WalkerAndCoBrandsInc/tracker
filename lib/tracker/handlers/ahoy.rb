@@ -10,7 +10,7 @@ module Tracker::Handlers::Ahoy
     # Returns:
     #   Hash
     def page(path:, page_args: {})
-      { page: { path: path, page_args: page_args } }
+      { page: { path: path, page_args: default_page_args.merge(page_args) } }
     end
 
     # Accepts:
@@ -20,7 +20,7 @@ module Tracker::Handlers::Ahoy
     # Returns:
     #   Hash
     def event(name:, event_args: {})
-      { event: { name: name, event_args: event_args } }
+      { event: { name: name, event_args: default_event_args.merge(event_args) } }
     end
   end
 

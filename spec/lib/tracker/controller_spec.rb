@@ -5,16 +5,14 @@ RSpec.describe Tracker::Controller do
     context "controller" do
       subject { app }
 
-      let(:client_args) { {uuid:"1", api_key:"api_key"} }
+      let(:client_args) { {uuid:"uuid", api_key:"api_key"} }
       let(:event_args) {
         {
-          aip:        true,
-          path:       "/",
-          hostname:   "example.org",
-          user_agent: nil,
-          uuid:       "1",
-          user_id:    1,
-          a:          1
+          aip:      true,
+          hostname: "example.org",
+          uuid:     "uuid",
+          user_id:  1,
+          a:        1
         }
       }
 
