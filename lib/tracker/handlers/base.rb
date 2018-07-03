@@ -1,7 +1,9 @@
+require "uri"
+
 class Tracker::Handlers::Base
   class NotImplemented < StandardError; end
 
-  attr_reader :api_key, :env, :uuid
+  attr_reader :api_key, :request, :uuid
 
   # Accepts:
   #   api_key      - String
@@ -9,17 +11,20 @@ class Tracker::Handlers::Base
   #   uuid_fetcher - Proc, should return String/int UUID of user.
   def initialize(api_key:"", env:, uuid_fetcher:)
     @api_key = api_key
-    @env     = env
+    @request = Rack::Request.new(env)
     @uuid    = uuid_fetcher.call(env)
   end
 
   private
 
   def default_page_args
-    default_args.merge({
-      path:       env["PATH_INFO"],
-      user_agent: env["HTTP_USER_AGENT"]
-    })
+    default_args
+      .merge({path: request.path_info, user_agent:request.user_agent})
+      .merge(params)
+  end
+
+  def params
+    request.params
   end
 
   def default_event_args
@@ -29,8 +34,8 @@ class Tracker::Handlers::Base
   def default_args
     {
       uuid:      uuid,
-      user_id:   env["rack.session"]["user_id"],
-      host_name: env["HTTP_HOST"]
+      user_id:   request.session["user_id"],
+      host_name: request.env["HTTP_HOST"]
     }
   end
 end

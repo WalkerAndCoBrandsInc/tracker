@@ -7,21 +7,20 @@ describe "GoogleAnalytics" do
     )
   end
 
+  let(:client_args) { {uuid: "uuid", api_key: "api_key"} }
+
   describe "Queuer" do
     it "builds pageview with given and default args" do
-      expect(queuer.page(path: "/", page_args: {a: 1})).to eq({
+      expect(queuer.page(path: "/", page_args: {a: 1})).to include({
         page: {
           path:        "/",
-          client_args: {uuid:"uuid", api_key:"api_key"},
-          page_args:   {
-            aip:        true,
-            path:       "/",
-            user_agent: env["HTTP_USER_AGENT"],
-            hostname:   env["HTTP_HOST"],
-            a:          1,
-            uuid:       "uuid",
-            user_id:    1
-          }
+          client_args: client_args,
+          page_args:   hash_including(
+            aip:       true,
+            hostname:  env["HTTP_HOST"],
+            path:      "/",
+            a:         1
+          )
         }
       })
     end
@@ -30,19 +29,17 @@ describe "GoogleAnalytics" do
       expect(queuer.event(
         name: "event name",
         event_args: {category: "category", label: "label", value: 1})
-      ).to eq({
+      ).to include({
         event: {
           name:        "event name",
-          client_args: {uuid:"uuid", api_key:"api_key"},
-          event_args: {
-            hostname: env["HTTP_HOST"],
-            category: "category",
-            label:    "label",
-            value:    1,
-            uuid:     "uuid",
-            user_id:  1,
-            aip:      true
-          }
+          client_args: client_args,
+          event_args:  hash_including(
+            aip:       true,
+            hostname:  env["HTTP_HOST"],
+            category:  "category",
+            label:     "label",
+            value:     1
+          )
         }
       })
     end

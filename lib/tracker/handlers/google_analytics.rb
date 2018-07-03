@@ -45,14 +45,14 @@ module Tracker::Handlers::GoogleAnalytics
     def default_page_args
       super.except(:host_name).merge({
         aip:        true, # anonymize ip
-        hostname:   env["HTTP_HOST"]
+        hostname:   request.env["HTTP_HOST"]
       })
     end
 
     def default_event_args
       super.except(:host_name).merge({
         aip:        true, # anonymize ip
-        hostname:   env["HTTP_HOST"]
+        hostname:   request.env["HTTP_HOST"]
       })
     end
 

@@ -5,27 +5,16 @@ RSpec.describe Tracker::Controller do
     context "controller" do
       subject { app }
 
-      let(:client_args) { {uuid:"uuid", api_key:"api_key"} }
-      let(:event_args) {
-        {
-          aip:      true,
-          hostname: "example.org",
-          uuid:     "uuid",
-          user_id:  1,
-          a:        1
-        }
-      }
+      before do
+        # this calls 'page', so below matchers don't work
+        allow_any_instance_of(Tracker::Middleware).to receive(:track_page)
+      end
 
       it "queues block" do
         allow(Tracker::GoogleAnalytics::Client).to receive(:event)
         expect(Tracker::Background::Sidekiq).to receive(:queue).with(
-         "Tracker::Handlers::GoogleAnalytics::Client", {
-           event: {
-             name:        "event",
-             client_args:  client_args,
-             event_args:   event_args
-           }
-         }
+         "Tracker::Handlers::GoogleAnalytics::Client",
+         {event: {name: "event", client_args: Hash, event_args: Hash }}
         ).and_call_original
 
         get "/"
@@ -34,11 +23,9 @@ RSpec.describe Tracker::Controller do
       end
 
       it "calls handler event" do
-        expect(Tracker::GoogleAnalytics::Client).to receive(:event).with({
-          name:        "event",
-          client_args: client_args,
-          event_args:  event_args
-        })
+        expect(Tracker::GoogleAnalytics::Client).to receive(:event).with(
+          hash_including(name:"event", client_args: Hash, event_args: Hash)
+        )
 
         get "/"
 

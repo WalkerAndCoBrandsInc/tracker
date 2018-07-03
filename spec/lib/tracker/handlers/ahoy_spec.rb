@@ -7,32 +7,14 @@ describe "Ahoy" do
 
   describe "Queuer" do
     it "builds pageview with given args" do
-      expect(queuer.page(path: "/", page_args: {a: 1})).to eq({
-        page: {
-          path:        "/",
-          page_args:   {
-            a:          1,
-            path:       "/",
-            user_agent: env["HTTP_USER_AGENT"],
-            host_name:  env["HTTP_HOST"],
-            uuid:       "uuid",
-            user_id:    1
-          }
-        }
+      expect(queuer.page(path: "/", page_args: {a: 1})).to include({
+        page: { path: "/", page_args: Hash }
       })
     end
 
     it "builds event with given and default args" do
-      expect(queuer.event(name: "event name", event_args: { a: 1 })).to eq({
-        event: {
-          name:        "event name",
-          event_args: {
-            a:        1,
-            host_name: env["HTTP_HOST"],
-            uuid:     "uuid",
-            user_id:  1
-          }
-        }
+      expect(queuer.event(name: "event name", event_args: {a: 1})).to include({
+        event: { name: "event name", event_args: Hash }
       })
     end
   end

@@ -17,7 +17,7 @@ module Tracker
 
     def call(env)
       env[KEY] = self
-      #track_page(env)
+      track_page(env)
       app.call(env)
     end
 
