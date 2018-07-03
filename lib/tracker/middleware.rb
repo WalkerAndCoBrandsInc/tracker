@@ -4,6 +4,8 @@ module Tracker
   DeferedInitializer = Struct.new(:queuer_class, :client_class, :opts)
 
   class Middleware
+    HTTP_ACCEPT_HTML = "text/html"
+
     attr_reader :app, :handlers
 
     KEY = "tracker".freeze
@@ -38,7 +40,8 @@ module Tracker
     private
 
     def track_page(env)
-      PageTrack.new(env).track
+      return if !env["HTTP_ACCEPT"].include?(HTTP_ACCEPT_HTML)
+      Tracker::PageTrack.new(env).track
     end
   end
 end

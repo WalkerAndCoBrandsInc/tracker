@@ -2,9 +2,26 @@ require "spec_helper"
 
 RSpec.describe Tracker::Controller do
   describe "#tracker" do
-    context "controller" do
-      subject { app }
+    subject { app }
 
+    context do
+      it "does not track non text/html pages" do
+        expect_any_instance_of(Tracker::PageTrack).
+          to_not receive(:track)
+
+        header "ACCEPT", "text/css,*/*;q=0."
+        get "style.css"
+      end
+
+      it "tracks text/html pages" do
+        expect_any_instance_of(Tracker::PageTrack).to receive(:track)
+
+        header "ACCEPT", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
+        get "/"
+      end
+    end
+
+    context "controller" do
       before do
         # this calls 'page', so below matchers don't work
         allow_any_instance_of(Tracker::Middleware).to receive(:track_page)

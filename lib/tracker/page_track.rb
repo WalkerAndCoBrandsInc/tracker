@@ -1,8 +1,6 @@
 require_relative "./controller"
 
-class PageTrack
-  HTTP_ACCEPT = ["text/html"]
-
+class Tracker::PageTrack
   include Tracker::Controller
 
   attr_reader :tracker, :env

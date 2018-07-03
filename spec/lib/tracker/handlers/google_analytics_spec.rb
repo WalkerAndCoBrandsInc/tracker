@@ -65,7 +65,7 @@ describe "GoogleAnalytics" do
         user_agent: env["HTTP_USER_AGENT"],
         uuid:       "uuid",
         user_id:    1,
-				utm_param:  "2",
+        utm_param:  "2",
         utm_source: "a"
       })
 
