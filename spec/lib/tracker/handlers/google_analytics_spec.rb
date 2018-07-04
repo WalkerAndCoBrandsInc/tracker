@@ -56,18 +56,12 @@ describe "GoogleAnalytics" do
     end
 
     it "tracks pageview with given and default args" do
-      expect_any_instance_of(Staccato::Tracker).to receive(:pageview).with({
-        path:       "/",
-        a:          1,
-        aip:        true,
-        hostname:   env["HTTP_HOST"],
-        path:       env["PATH_INFO"],
-        user_agent: env["HTTP_USER_AGENT"],
-        uuid:       "uuid",
-        user_id:    1,
-        utm_param:  "2",
-        utm_source: "a"
-      })
+      expect_any_instance_of(Staccato::Tracker).to receive(:pageview).
+        with(hash_including(
+          hostname:   env["HTTP_HOST"],
+          user_agent: env["HTTP_USER_AGENT"]
+        )
+      )
 
       subject.page(queuer.page(path: "/", page_args: {a: 1})[:page])
     end

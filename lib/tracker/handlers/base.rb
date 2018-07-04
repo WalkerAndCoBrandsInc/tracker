@@ -27,8 +27,12 @@ class Tracker::Handlers::Base
 
   def default_page_args
     default_args
-      .merge({path: request.path_info, user_agent:request.user_agent})
       .merge(params)
+      .merge({
+        path:       request.path_info,
+        referer:    request.referer,
+        user_agent: request.user_agent
+    })
   end
 
   def params

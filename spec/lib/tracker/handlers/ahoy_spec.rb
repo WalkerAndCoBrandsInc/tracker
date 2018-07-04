@@ -24,18 +24,12 @@ describe "Ahoy" do
 
     it "tracks pageview with given and default args" do
       page_args = {
-        a:          1,
-        path:       "/",
         user_agent: env["HTTP_USER_AGENT"],
         host_name:  env["HTTP_HOST"],
-        uuid:       "uuid",
-        user_id:    1,
-        utm_param:  "2",
-        utm_source: "a"
       }
 
       expect_any_instance_of(Ahoy::Tracker).to receive(:track).
-        with("Visited page", page_args)
+        with("Visited page", hash_including(page_args))
 
       subject.page(queuer.page(path: "/", page_args: {a: 1})[:page])
     end
