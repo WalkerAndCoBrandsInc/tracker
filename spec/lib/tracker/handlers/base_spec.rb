@@ -45,7 +45,7 @@ describe "Base" do
         user_agent:         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6)",
         utm_param:          "2",
         utm_source:         "a",
-        referer:            nil,
+        referrer:           nil,
         ua_device_name:     nil,
         ua_device_type:     "desktop",
         ua_full_version:    nil,

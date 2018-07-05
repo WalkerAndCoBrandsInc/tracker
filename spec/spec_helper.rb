@@ -5,14 +5,16 @@ require "rack/test"
 require "vcr"
 require "pry"
 
+require "ahoy"
 require "tracker"
 
 # order matters here
 require "sidekiq"
 require "sidekiq/testing"
 require "tracker/background/sidekiq"
+require "tracker/handlers/ahoy"
+require "tracker/handlers/google_analytics"
 
-require "ahoy"
 
 # Required to make Ahoy work in non Rails env
 class Ahoy::Store < Ahoy::Stores::LogStore

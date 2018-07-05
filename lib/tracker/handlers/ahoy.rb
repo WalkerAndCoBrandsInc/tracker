@@ -51,3 +51,5 @@ module Tracker::Handlers::Ahoy
     end
   end
 end
+
+module Tracker; Ahoy = Handlers::Ahoy; end

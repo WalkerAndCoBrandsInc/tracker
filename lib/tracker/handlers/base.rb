@@ -31,7 +31,7 @@ class Tracker::Handlers::Base
       .merge(params)
       .merge({
         path:               request.path_info,
-        referer:            request.referer,
+        referrer:           request.referrer,
         user_agent:         request.user_agent,
         ua_name:            d.name,
         ua_full_version:    d.full_version,
