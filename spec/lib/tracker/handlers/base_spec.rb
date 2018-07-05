@@ -38,14 +38,20 @@ describe "Base" do
 
     it "returns default page args" do
       expect(test_handler.page).to eq({
-        uuid:       "uuid",
-        user_id:    1,
-        host_name:  "localhost:3000",
-        path:       "/",
-        user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6)",
-        utm_param:  "2",
-        utm_source: "a",
-        referer:    nil
+        uuid:               "uuid",
+        user_id:            1,
+        host_name:          "localhost:3000",
+        path:               "/",
+        user_agent:         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6)",
+        utm_param:          "2",
+        utm_source:         "a",
+        referer:            nil,
+        ua_device_name:     nil,
+        ua_device_type:     "desktop",
+        ua_full_version:    nil,
+        ua_name:            nil,
+        ua_os_full_version: "10.12.6",
+        ua_os_name:         "Mac"
       })
     end
 

@@ -26,12 +26,19 @@ class Tracker::Handlers::Base
   private
 
   def default_page_args
+    d = DeviceDetector.new(request.user_agent)
     default_args
       .merge(params)
       .merge({
-        path:       request.path_info,
-        referer:    request.referer,
-        user_agent: request.user_agent
+        path:               request.path_info,
+        referer:            request.referer,
+        user_agent:         request.user_agent,
+        ua_name:            d.name,
+        ua_full_version:    d.full_version,
+        ua_os_name:         d.os_name,
+        ua_os_full_version: d.os_full_version,
+        ua_device_name:     d.device_name,
+        ua_device_type:     d.device_type
     })
   end
 
