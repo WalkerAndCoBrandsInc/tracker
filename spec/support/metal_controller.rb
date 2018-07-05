@@ -8,7 +8,7 @@ class MetalController < ActionController::Metal
 
   def index
     queue_tracker do |t|
-      t.page(path: "/path", page_args: {a: 1})
+      t.event(name: "event", event_args: {a: 1})
     end
 
     render "metal/index"

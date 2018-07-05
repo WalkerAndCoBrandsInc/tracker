@@ -15,7 +15,7 @@ module Tracker::Handlers::GoogleAnalytics
         page: {
           path:        path,
           client_args: client_args,
-          page_args:   default_args.merge(page_args)
+          page_args:   default_page_args.merge(page_args)
         }
       }
     end
@@ -31,7 +31,7 @@ module Tracker::Handlers::GoogleAnalytics
         event: {
           name:        name,
           client_args: client_args,
-          page_args:   default_args.merge(event_args)
+          event_args:  default_event_args.merge(event_args)
         }
       }
     end
@@ -42,13 +42,18 @@ module Tracker::Handlers::GoogleAnalytics
     #
     # Returns:
     #   Hash
-    def default_args
-      {
+    def default_page_args
+      super.except(:host_name).merge({
         aip:        true, # anonymize ip
-        path:       env["PATH_INFO"],
-        hostname:   env["HTTP_HOST"],
-        user_agent: env["HTTP_USER_AGENT"]
-      }
+        hostname:   request.env["HTTP_HOST"]
+      })
+    end
+
+    def default_event_args
+      super.except(:host_name).merge({
+        aip:        true, # anonymize ip
+        hostname:   request.env["HTTP_HOST"]
+      })
     end
 
     # client_args are client specific, ie `Staccato.tracker` arguments; this
@@ -80,8 +85,8 @@ module Tracker::Handlers::GoogleAnalytics
       #     action   - String
       #     label    - String
       #     value    - String
-      def event(name:, client_args:, page_args: {})
-        client(client_args).event(page_args.merge(action: name))
+      def event(name:, client_args:, event_args: {})
+        client(client_args).event(event_args.merge(action: name))
       end
 
       private

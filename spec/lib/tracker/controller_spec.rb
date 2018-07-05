@@ -1,59 +1,48 @@
 require "spec_helper"
 
 RSpec.describe Tracker::Controller do
-  def app
-    Rack::Builder.new do
-      use UUIDSetter
-      use Tracker::Middleware do
-        handler(
-          queue_class:  Tracker::GoogleAnalytics::Queuer,
-          client_class: Tracker::GoogleAnalytics::Client,
-          opts:         { api_key: "api_key" }
-        )
+  describe "#tracker" do
+    subject { app }
 
-        queuer Tracker::Background::Sidekiq
+    context do
+      it "does not track non text/html pages" do
+        expect_any_instance_of(Tracker::PageTrack).
+          to_not receive(:track)
 
-        uuid do |env|
-          env[UUIDSetter::KEY]
-        end
+        header "ACCEPT", "text/css,*/*;q=0."
+        get "style.css"
       end
 
-      run MetalController.action(:index)
+      it "tracks text/html pages" do
+        expect_any_instance_of(Tracker::PageTrack).to receive(:track)
+
+        header "ACCEPT", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
+        get "/"
+      end
     end
-  end
 
-  describe "#tracker" do
     context "controller" do
-      subject { app }
+      before do
+        # this calls 'page', so below matchers don't work
+        allow_any_instance_of(Tracker::Middleware).to receive(:track_page)
+      end
 
-      it "queues given block" do
+      it "queues block" do
+        allow(Tracker::GoogleAnalytics::Client).to receive(:event)
         expect(Tracker::Background::Sidekiq).to receive(:queue).with(
-          "Tracker::Handlers::GoogleAnalytics::Client", {
-            page: {
-              path:"/path",
-              client_args: {uuid:"1", api_key:"api_key"},
-              page_args: {
-                aip:        true,
-                path:       "/",
-                hostname:   "example.org",
-                user_agent: nil,
-                a:          1
-              }
-            }
-          }
+         "Tracker::Handlers::GoogleAnalytics::Client",
+         {event: {name: "event", client_args: Hash, event_args: Hash }}
         ).and_call_original
 
-        expect(Tracker::Handlers::GoogleAnalytics::Client).to receive(:page).with({
-          path: "/path",
-          client_args: {uuid:"1", api_key:"api_key"},
-          page_args: {
-            aip:        true,
-            path:       "/",
-            hostname:   "example.org",
-            user_agent: nil,
-            a:          1
-          }
-        })
+        get "/"
+
+        Tracker::Background::Sidekiq.drain
+      end
+
+      it "calls handler event" do
+        expect(Tracker::GoogleAnalytics::Client).to receive(:event).with(
+          hash_including(name:"event", client_args: Hash, event_args: Hash)
+        )
 
         get "/"
 
