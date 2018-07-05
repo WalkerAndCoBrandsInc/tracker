@@ -19,9 +19,10 @@ module Tracker
     end
 
     def call(env)
+      s, h, o = app.call(env) # needs to be before track
       env[KEY] = self
       track_page(env)
-      app.call(env)
+      return [s, h, o]
     end
 
     def handler(queue_class:, client_class:, opts: {})
