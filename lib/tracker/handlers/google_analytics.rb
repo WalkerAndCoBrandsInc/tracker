@@ -101,3 +101,5 @@ module Tracker::Handlers::GoogleAnalytics
     end
   end
 end
+
+module Tracker; GoogleAnalytics = Handlers::GoogleAnalytics; end

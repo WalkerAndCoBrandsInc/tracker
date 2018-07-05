@@ -7,8 +7,5 @@ require_relative "tracker/background"
 require_relative "tracker/railtie" if defined?(Rails)
 
 module Tracker
-  GoogleAnalytics = Handlers::GoogleAnalytics
-  Ahoy            = Handlers::Ahoy
-
   class NotImplemented < StandardError; end
 end
