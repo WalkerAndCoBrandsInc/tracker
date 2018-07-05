@@ -30,11 +30,6 @@ config.middleware.use(Tracker::Middleware) do
     opts:         { api_key: "" }
   )
 
-  handler Tracker::Handlers::Ahoy, { api_key: "" }
-
-  # TODO
-  handler Tracker::Amplitude, { api_key: "" }
-
   # specify which background worker to use to async send events
   queuer Tracker::Background::Sidekiq
 
