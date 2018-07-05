@@ -1,4 +1,5 @@
 require_relative "./page_track"
+require "device_detector"
 
 module Tracker
   DeferedInitializer = Struct.new(:queuer_class, :client_class, :opts)
@@ -41,6 +42,8 @@ module Tracker
 
     def track_page(env)
       return if !env["HTTP_ACCEPT"].include?(HTTP_ACCEPT_HTML)
+      return if DeviceDetector.new(env["HTTP_USER_AGENT"]).bot?
+
       Tracker::PageTrack.new(env).track
     end
   end

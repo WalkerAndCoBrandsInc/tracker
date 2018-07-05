@@ -4,7 +4,14 @@ RSpec.describe Tracker::Controller do
   describe "#tracker" do
     subject { app }
 
-    context do
+    context "PageTrack" do
+      it "tracks text/html pages" do
+        expect_any_instance_of(Tracker::PageTrack).to receive(:track)
+
+        header "ACCEPT", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
+        get "/"
+      end
+
       it "does not track non text/html pages" do
         expect_any_instance_of(Tracker::PageTrack).
           to_not receive(:track)
@@ -13,10 +20,12 @@ RSpec.describe Tracker::Controller do
         get "style.css"
       end
 
-      it "tracks text/html pages" do
-        expect_any_instance_of(Tracker::PageTrack).to receive(:track)
+      it "does not track bots" do
+        expect_any_instance_of(Tracker::PageTrack).
+          to_not receive(:track)
 
         header "ACCEPT", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
+        header "USER_AGENT", "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
         get "/"
       end
     end
