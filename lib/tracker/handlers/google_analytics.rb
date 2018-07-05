@@ -74,7 +74,15 @@ module Tracker::Handlers::GoogleAnalytics
       #   client_args - Hash
       #   page_args   - Hash, optional
       def page(path:, client_args:, page_args: {})
-        client(client_args).pageview(page_args.merge(path: path))
+        client(client_args).pageview(page_args.merge(
+          path: path,
+          campaign_name:    page_args[:utm_name],
+          campaign_source:  page_args[:utm_source],
+          campaign_medium:  page_args[:utm_medium],
+          campaign_keyword: page_args[:utm_keyword],
+          campaign_content: page_args[:utm_content],
+          campaign_id:      page_args[:utm_id]
+        ))
       end
 
       # Accepts:
