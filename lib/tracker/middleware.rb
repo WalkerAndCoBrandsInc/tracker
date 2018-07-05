@@ -19,9 +19,10 @@ module Tracker
     end
 
     def call(env)
+      env[KEY] = self # needs to be before app.call
       s, h, o = app.call(env) # needs to be before track
-      env[KEY] = self
       track_page(env)
+
       return [s, h, o]
     end
 

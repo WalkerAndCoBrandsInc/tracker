@@ -38,10 +38,7 @@ RSpec.describe Tracker::Controller do
 
       it "queues block" do
         allow(Tracker::GoogleAnalytics::Client).to receive(:event)
-        expect(Tracker::Background::Sidekiq).to receive(:queue).with(
-         "Tracker::Handlers::GoogleAnalytics::Client",
-         {event: {name: "event", client_args: Hash, event_args: Hash }}
-        ).and_call_original
+        expect(Tracker::Background::Sidekiq).to receive(:queue)
 
         get "/"
 
