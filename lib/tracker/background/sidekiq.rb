@@ -1,5 +1,6 @@
 require "active_support/inflections"
 require "active_support/core_ext/hash/keys"
+require "sidekiq"
 
 class Tracker::Background::Sidekiq < Tracker::Background::Base
   include ::Sidekiq::Worker
