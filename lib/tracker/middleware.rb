@@ -43,7 +43,7 @@ module Tracker
     private
 
     def track_page(env)
-      return if !env["HTTP_ACCEPT"].include?(HTTP_ACCEPT_HTML)
+      return if env["HTTP_ACCEPT"] && !env["HTTP_ACCEPT"].include?(HTTP_ACCEPT_HTML)
       return if DeviceDetector.new(env["HTTP_USER_AGENT"]).bot?
 
       Tracker::PageTrack.new(env).track
