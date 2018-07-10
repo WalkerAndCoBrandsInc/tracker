@@ -6,6 +6,8 @@ require "vcr"
 require "pry"
 
 require "ahoy"
+require "amplitude-api"
+
 require "tracker"
 
 # order matters here
@@ -14,7 +16,7 @@ require "sidekiq/testing"
 require "tracker/background/sidekiq"
 require "tracker/handlers/ahoy"
 require "tracker/handlers/google_analytics"
-
+require "tracker/handlers/amplitude"
 
 # Required to make Ahoy work in non Rails env
 class Ahoy::Store < Ahoy::Stores::LogStore
