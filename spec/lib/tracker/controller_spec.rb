@@ -46,7 +46,7 @@ RSpec.describe Tracker::Controller do
 
       it "queues block" do
         allow(Tracker::GoogleAnalytics::Client).to receive(:event)
-        expect(Tracker::Background::Sidekiq).to receive(:queue)
+        expect(Tracker::Background::Sidekiq).to receive(:q)
 
         get "/"
 

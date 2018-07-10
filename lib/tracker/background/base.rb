@@ -1,5 +1,5 @@
 class Tracker::Background::Base
-  def self.queue(*args)
+  def self.q(*args)
     raise Tracker::NotImplemented
   end
 end
