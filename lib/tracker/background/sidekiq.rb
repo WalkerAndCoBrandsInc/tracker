@@ -6,7 +6,7 @@ class Tracker::Background::Sidekiq < Tracker::Background::Base
   include ::Sidekiq::Worker
 
   class << self
-    alias_method :queue, :perform_async
+    alias_method :q, :perform_async
   end
 
   # Accepts:

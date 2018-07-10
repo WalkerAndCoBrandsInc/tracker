@@ -10,6 +10,7 @@ module Tracker
     attr_reader :app, :handlers
 
     KEY = "tracker".freeze
+    IGNORE_STATUS = [404].freeze
 
     def initialize(app, &block)
       @app      = app
@@ -21,7 +22,7 @@ module Tracker
     def call(env)
       env[KEY] = self # needs to be before app.call
       s, h, o = app.call(env) # needs to be before track
-      track_page(env)
+      track_page(env) if should_track?(s, env)
 
       return [s, h, o]
     end
@@ -43,10 +44,15 @@ module Tracker
     private
 
     def track_page(env)
-      return if env["HTTP_ACCEPT"] && !env["HTTP_ACCEPT"].include?(HTTP_ACCEPT_HTML)
-      return if DeviceDetector.new(env["HTTP_USER_AGENT"]).bot?
-
       Tracker::PageTrack.new(env).track
+    end
+
+    def should_track?(status, env)
+      return false if IGNORE_STATUS.include?(status)
+      return false if env["HTTP_ACCEPT"] && !env["HTTP_ACCEPT"].include?(HTTP_ACCEPT_HTML)
+      return false if DeviceDetector.new(env["HTTP_USER_AGENT"]).bot?
+
+      true
     end
   end
 end
