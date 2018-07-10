@@ -26,14 +26,12 @@ module Tracker::Handlers::Ahoy
 
   class Client
     class << self
-      VISITED_PAGE = "Visited page".freeze
-
       # Accepts:
       #   path        - String
       #   page_args   - Hash, optional
       def page(path:, page_args: {})
         # TODO: use native page call
-        client.track(VISITED_PAGE, page_args.merge(path: path))
+        client.track(Tracker::VISITED_PAGE, page_args.merge(path: path))
       end
 
       # Accepts:
