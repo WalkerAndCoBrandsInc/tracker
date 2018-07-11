@@ -53,8 +53,12 @@ class Tracker::Handlers::Base
   def default_args
     {
       uuid:      uuid,
-      user_id:   request.session["user_id"],
+      user_id:   user_id_from_session,
       host_name: request.env["HTTP_HOST"]
     }
+  end
+
+  def user_id_from_session
+    request.session["user_id"]
   end
 end

@@ -19,7 +19,7 @@ describe "Amplitude" do
             insert_id: String,
             time:      String,
             event_type: "Visited page",
-            event_properties: {a: 1, path: "/"}
+            event_properties: hash_including(a: 1, path: "/")
           )
         }
       })
@@ -31,7 +31,7 @@ describe "Amplitude" do
           api_key: "api_key",
           event_args: hash_including(
             event_type: "event name",
-            event_properties: {a: 1}
+            event_properties: hash_including(a: 1)
           )
         }
       })

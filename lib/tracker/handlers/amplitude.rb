@@ -38,10 +38,10 @@ module Tracker::Handlers::Amplitude
 
     def build_event_args(name, args)
       {
-        user_id:          args[:user_id],
+        user_id:          args[:user_id] || user_id_from_session,
         device_id:        uuid,
         event_type:       name,
-        event_properties: args,
+        event_properties: default_args.merge(args),
         insert_id:        SecureRandom.base64,
         time:             DateTime.now.strftime('%Q')
       }
