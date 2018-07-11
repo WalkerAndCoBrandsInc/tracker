@@ -14,7 +14,10 @@ module Tracker::Handlers::Amplitude
       {
         track: {
           api_key:    api_key,
-          event_args: build_event_args(Tracker::VISITED_PAGE, page_args.merge(path: path))
+          event_args: build_event_args(
+            Tracker::VISITED_PAGE,
+            default_page_args.merge(page_args.merge(path: path))
+          )
         }
       }
     end
@@ -29,7 +32,7 @@ module Tracker::Handlers::Amplitude
       {
         track: {
           api_key:    api_key,
-          event_args: build_event_args(name, event_args)
+          event_args: build_event_args(name, default_event_args.merge(event_args))
         }
       }
     end
@@ -41,7 +44,7 @@ module Tracker::Handlers::Amplitude
         user_id:          args[:user_id] || user_id_from_session,
         device_id:        uuid,
         event_type:       name,
-        event_properties: default_args.merge(args),
+        event_properties: args,
         insert_id:        SecureRandom.base64,
         time:             DateTime.now.strftime('%Q')
       }
