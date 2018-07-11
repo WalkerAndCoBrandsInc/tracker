@@ -6,7 +6,7 @@ require "vcr"
 require "pry"
 
 require "ahoy"
-require "amplitude-api"
+require "staccato"
 
 require "tracker"
 

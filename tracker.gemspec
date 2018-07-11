@@ -19,9 +19,9 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "staccato", ">= 0.5"
   spec.add_dependency "activesupport", "~> 4.0.13"
   spec.add_dependency "device_detector"
+  spec.add_dependency "httparty"
 
   spec.add_development_dependency "rack", ">= 1.0"
   spec.add_development_dependency "bundler"
@@ -29,11 +29,11 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry"
   spec.add_development_dependency "rack-test"
   spec.add_development_dependency "actionpack", "~> 4.0.13"
-
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "sidekiq", "~> 2.4.0"
   spec.add_development_dependency "rspec-sidekiq"
   spec.add_development_dependency "vcr"
+
   spec.add_development_dependency "ahoy_matey"
-  spec.add_development_dependency "amplitude-api"
+  spec.add_development_dependency "staccato", ">= 0.5"
 end
