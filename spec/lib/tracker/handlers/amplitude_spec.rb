@@ -48,6 +48,9 @@ describe "Amplitude" do
 
     it "transforms registration event" do
       expect(HTTParty).to receive(:post).
+        with(String, {body: hash_including(event: match(/Registered/))})
+
+      expect(HTTParty).to receive(:post).
         with(String, {body: hash_including(event: match(/\$identify/))})
 
       subject.track(
