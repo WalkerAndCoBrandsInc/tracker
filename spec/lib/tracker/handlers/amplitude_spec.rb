@@ -43,8 +43,18 @@ describe "Amplitude" do
 
     it "sets client api key" do
       expect(HTTParty).to receive(:post)
-
       subject.track(queuer.page(path: "/", page_args: {a: 1})[:track])
+    end
+
+    it "transforms registration event" do
+      expect(HTTParty).to receive(:post).
+        with(String, {body: hash_including(event: match(/\$identify/))})
+
+      subject.track(
+        queuer.event(
+          name: Tracker::REGISTRATION, event_args: {event_properties: {a: 1}}
+        )[:track]
+      )
     end
   end
 end
