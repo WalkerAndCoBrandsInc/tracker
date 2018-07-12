@@ -53,10 +53,27 @@ module Tracker::Handlers::Amplitude
 
   class Client
     class << self
-      URL = "https://api.amplitude.com/httpapi".freeze
+      URL      = "https://api.amplitude.com/httpapi".freeze
+      IDENTIFY = "$identify".freeze
 
+      # Accepts:
+      #   api_key    - String
+      #   event_args - Hash
       def track(api_key:, event_args: {})
-        HTTParty.post(URL, {body: {api_key: api_key, event: JSON.dump(event_args)}})
+        case event_args[:event_type]
+        when Tracker::REGISTRATION
+          event_args[:event_type] = IDENTIFY
+          event_args[:user_properties] = {"$set" => event_args[:event_properties]}
+          event_args = event_args.except(:event_properties)
+        end
+
+        post(api_key, event_args)
+      end
+
+      private
+
+      def post(api_key, args)
+        HTTParty.post(URL, {body: {api_key: api_key, event: JSON.dump(args)}})
       end
     end
   end

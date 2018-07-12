@@ -8,6 +8,7 @@ require_relative "tracker/railtie" if defined?(Rails)
 
 module Tracker
   VISITED_PAGE = "Visited page".freeze
+  REGISTRATION = "Registered".freeze
 
   class NotImplemented < StandardError; end
 end

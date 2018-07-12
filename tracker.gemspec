@@ -32,7 +32,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "sidekiq", "~> 2.4.0"
   spec.add_development_dependency "rspec-sidekiq"
-  spec.add_development_dependency "vcr"
 
   spec.add_development_dependency "ahoy_matey"
   spec.add_development_dependency "staccato", ">= 0.5"

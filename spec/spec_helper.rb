@@ -47,7 +47,3 @@ RSpec.configure do |config|
   config.include EnvHelpers
   config.include App
 end
-
-VCR.configure do |config|
-  config.cassette_library_dir = "fixtures/vcr_cassettes"
-end
