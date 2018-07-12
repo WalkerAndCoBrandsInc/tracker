@@ -62,6 +62,10 @@ module Tracker::Handlers::Amplitude
       def track(api_key:, event_args: {})
         case event_args[:event_type]
         when Tracker::REGISTRATION
+          # post regular event first
+          post(api_key, event_args)
+
+          # then post $identify event
           event_args[:event_type] = IDENTIFY
           event_args[:user_properties] = {"$set" => event_args[:event_properties]}
           event_args = event_args.except(:event_properties)
