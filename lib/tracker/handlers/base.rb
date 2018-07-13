@@ -3,16 +3,17 @@ require "uri"
 class Tracker::Handlers::Base
   class NotImplemented < StandardError; end
 
-  attr_reader :api_key, :request, :uuid
+  attr_reader :api_key, :env, :uuid
 
   # Accepts:
   #   api_key      - String
   #   env          - Hash
   #   uuid_fetcher - Proc, should return String/int UUID of user.
-  def initialize(api_key:"", env:, uuid_fetcher:)
+  #   uuid         - String (Optional)
+  def initialize(api_key:"", env:, uuid_fetcher: -> proc {}, uuid: nil)
     @api_key = api_key
-    @request = Rack::Request.new(env)
-    @uuid    = uuid_fetcher.call(env)
+    @env     = env
+    @uuid    = uuid || uuid_fetcher.call(env)
   end
 
   def page(*args)
@@ -26,13 +27,13 @@ class Tracker::Handlers::Base
   private
 
   def default_page_args
-    d = DeviceDetector.new(request.user_agent)
+    d = DeviceDetector.new(env["HTTP_USER_AGENT"])
     default_args
       .merge(params)
       .merge({
-        path:               request.path_info,
-        referrer:           request.referrer,
-        user_agent:         request.user_agent,
+        path:               env["PATH_INFO"],
+        referrer:           env["HTTP_REFERER"],
+        user_agent:         env["HTTP_USER_AGENT"],
         ua_name:            d.name,
         ua_full_version:    d.full_version,
         ua_os_name:         d.os_name,
@@ -43,7 +44,8 @@ class Tracker::Handlers::Base
   end
 
   def params
-    request.params.deep_symbolize_keys
+    # pass "" instead of nil to avoid exception
+    CGI.parse(env["QUERY_STRING"] || "").deep_symbolize_keys
   end
 
   def default_event_args
@@ -54,11 +56,11 @@ class Tracker::Handlers::Base
     {
       uuid:      uuid,
       user_id:   user_id_from_session,
-      host_name: request.env["HTTP_HOST"]
+      host_name: env["HTTP_HOST"]
     }
   end
 
   def user_id_from_session
-    request.session["user_id"]
+    env["rack.session"]["user_id"] if env["rack.session"]
   end
 end
