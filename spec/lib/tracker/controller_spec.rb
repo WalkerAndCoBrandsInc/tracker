@@ -1,8 +1,17 @@
 require "spec_helper"
 
 RSpec.describe Tracker::Controller do
-  describe "#tracker" do
+  describe "queue_tracker" do
     subject { app }
+
+    context "middleware" do
+      it "sets global instance" do
+        header "ACCEPT", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
+        get "/"
+
+        expect(Tracker.middle_instance).to be_a(Tracker::Middleware)
+      end
+    end
 
     context "PageTrack" do
       it "tracks text/html pages" do

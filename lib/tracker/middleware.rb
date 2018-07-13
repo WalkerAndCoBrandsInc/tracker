@@ -17,6 +17,8 @@ module Tracker
       @handlers = []
 
       instance_exec(&block) if block_given?
+
+      Tracker.middle_instance = self
     end
 
     def call(env)
