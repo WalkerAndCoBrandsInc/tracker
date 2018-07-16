@@ -8,9 +8,14 @@ RSpec.describe Tracker::WithoutController do
     end
 
     it "tracks without env" do
-      expect(Tracker::Background::Sidekiq).to receive(:q)
+      expect(Tracker::Background::Sidekiq).to receive(:q).
+        with(
+          "Tracker::Handlers::GoogleAnalytics::Client",
+          page: hash_including(path: "/", page_args: hash_including(uuid: "uuid")\
+        )
+      )
 
-      Tracker::WithoutController.queue_tracker({}, "uuid") do |t|
+      Tracker::WithoutController.queue_tracker(uuid: "uuid") do |t|
         t.page(path: "/", page_args: {a: 1})
       end
     end
