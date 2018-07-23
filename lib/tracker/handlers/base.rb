@@ -33,7 +33,7 @@ class Tracker::Handlers::Base
   def default_page_args
     d = DeviceDetector.new(env["HTTP_USER_AGENT"])
     default_args
-      .merge(params)
+      .merge(param_without_user_password)
       .merge({
         path:               env["PATH_INFO"],
         referrer:           env["HTTP_REFERER"],
@@ -70,5 +70,11 @@ class Tracker::Handlers::Base
 
   def user_id_from_session
     env["rack.session"]["user_id"] if env["rack.session"]
+  end
+
+  def param_without_user_password
+    params[:user].delete(:password) if params[:user][:password].present?
+
+    params
   end
 end
