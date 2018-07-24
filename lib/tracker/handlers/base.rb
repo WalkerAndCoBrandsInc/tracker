@@ -3,7 +3,7 @@ require "uri"
 class Tracker::Handlers::Base
   class NotImplemented < StandardError; end
 
-  attr_reader :api_key, :env, :uuid
+  attr_reader :api_key, :env, :uuid, :request
 
   # Accepts:
   #   api_key      - String
@@ -13,6 +13,7 @@ class Tracker::Handlers::Base
   def initialize(api_key:"", env:, uuid_fetcher: -> proc {}, uuid: nil)
     @api_key = api_key
     @env     = env
+    @request = Rack::Request.new(env)
     @uuid    = uuid || uuid_fetcher.call(env)
   end
 
@@ -33,7 +34,8 @@ class Tracker::Handlers::Base
   def default_page_args
     d = DeviceDetector.new(env["HTTP_USER_AGENT"])
     default_args
-      .merge(param_without_user_password)
+      .merge(params)
+      .merge(request_params)
       .merge({
         path:               env["PATH_INFO"],
         referrer:           env["HTTP_REFERER"],
@@ -50,6 +52,16 @@ class Tracker::Handlers::Base
   def params
     # pass "" instead of nil to avoid exception
     CGI.parse(env["QUERY_STRING"] || "").deep_symbolize_keys
+  end
+
+  def request_params
+    # pass {} instead of nil to avoid exception
+    if (env['REQUEST_METHOD']  == 'POST' || env['REQUEST_METHOD']  == 'PUT')
+      sanitized_params = request.params.deep_symbolize_keys
+      sanitized_params[:user].delete(:password) if sanitized_params[:user] && sanitized_params[:user][:password].present?
+    end
+
+    sanitized_params || {}
   end
 
   def default_event_args
@@ -70,11 +82,5 @@ class Tracker::Handlers::Base
 
   def user_id_from_session
     env["rack.session"]["user_id"] if env["rack.session"]
-  end
-
-  def param_without_user_password
-    params[:user].delete(:password) if params[:user][:password].present?
-
-    params
   end
 end

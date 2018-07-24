@@ -7,6 +7,16 @@ describe "Amplitude" do
     )
   end
 
+  let(:updated_env) do
+    env_with_request_params
+  end
+
+  let(:queue_with_request_params) do
+    Tracker::Handlers::Amplitude::Queuer.new(
+      api_key: "api_key", env: updated_env, uuid_fetcher: uuid_fetcher
+    )
+  end
+
   let(:api_key) { "api_key" }
 
   describe "Queuer" do
@@ -58,6 +68,23 @@ describe "Amplitude" do
           )
         }
       })
+    end
+
+    context "with request params" do
+      it "removes the user password in the params before tracking" do
+        expect(queue_with_request_params.page(path: "/sessions")).to include({
+          track: {
+            api_key:    "api_key",
+            event_args: hash_including(
+              device_id: "uuid",
+              insert_id: String,
+              time:      String,
+              event_type: "Visited page",
+              event_properties: hash_including(path: "/sessions", user: {email: "overwow@wilding.com"})
+            )
+           }
+        })
+      end
     end
   end
 

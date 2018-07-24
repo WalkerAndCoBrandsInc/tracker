@@ -40,11 +40,11 @@ describe "Base" do
       end
     end
 
-  let(:test_handler) do
-    TestHandler.new(
-      api_key: "api_key", env: env, uuid_fetcher: uuid_fetcher
-    )
-  end
+    let(:test_handler) do
+      TestHandler.new(
+        api_key: "api_key", env: env, uuid_fetcher: uuid_fetcher
+      )
+    end
 
     it "returns default page args" do
       expect(test_handler.page).to eq({
