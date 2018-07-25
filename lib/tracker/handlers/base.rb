@@ -13,7 +13,6 @@ class Tracker::Handlers::Base
   def initialize(api_key:"", env:, uuid_fetcher: -> proc {}, uuid: nil)
     @api_key = api_key
     @env     = env
-    @request = Rack::Request.new(env)
     @uuid    = uuid || uuid_fetcher.call(env)
   end
 
@@ -57,11 +56,12 @@ class Tracker::Handlers::Base
   def request_params
     # pass {} instead of nil to avoid exception
     if (env['REQUEST_METHOD']  == 'POST' || env['REQUEST_METHOD']  == 'PUT')
-      sanitized_params = request.params.deep_symbolize_keys
-      sanitized_params[:user].delete(:password) if sanitized_params[:user] && sanitized_params[:user][:password].present?
+      rack_input = env['rack.input'].read
+      decoded_params = Rack::Utils.parse_nested_query(rack_input).deep_symbolize_keys
+      decoded_params[:user].delete(:password) if decoded_params[:user] && decoded_params[:user][:password].present?
     end
 
-    sanitized_params || {}
+    decoded_params || {}
   end
 
   def default_event_args
