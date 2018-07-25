@@ -3,17 +3,18 @@ require "uri"
 class Tracker::Handlers::Base
   class NotImplemented < StandardError; end
 
-  attr_reader :api_key, :env, :uuid, :request
+  attr_reader :api_key, :env, :uuid
 
   # Accepts:
   #   api_key      - String
   #   env          - Hash
   #   uuid_fetcher - Proc, should return String/int UUID of user.
   #   uuid         - String (Optional)
-  def initialize(api_key:"", env:, uuid_fetcher: -> proc {}, uuid: nil)
+  def initialize(api_key:"", env: , uuid_fetcher: -> proc {}, uuid: nil)
     @api_key = api_key
     @env     = env
     @uuid    = uuid || uuid_fetcher.call(env)
+    env['rack.input'].rewind if env.present?
   end
 
   def page(*args)
@@ -54,14 +55,14 @@ class Tracker::Handlers::Base
   end
 
   def request_params
-    # pass {} instead of nil to avoid exception
-    if (env['REQUEST_METHOD']  == 'POST' || env['REQUEST_METHOD']  == 'PUT')
-      rack_input = env['rack.input'].read
-      decoded_params = Rack::Utils.parse_nested_query(rack_input).deep_symbolize_keys
-      decoded_params[:user].delete(:password) if decoded_params[:user] && decoded_params[:user][:password].present?
-    end
+    return {} unless env.present?
 
-    decoded_params || {}
+    rack_input = env['rack.input'].read
+
+    decoded_params = Rack::Utils.parse_nested_query(rack_input).deep_symbolize_keys
+    decoded_params[:user].delete(:password) if decoded_params[:user] && decoded_params[:user][:password].present?
+
+    decoded_params
   end
 
   def default_event_args
