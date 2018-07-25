@@ -36,6 +36,22 @@ module Tracker::Handlers::GoogleAnalytics
       }
     end
 
+    # Accepts:
+    #   id         - String
+    #   event_args - Hash, optional
+    #
+    # Returns:
+    #   Hash
+    def conversion(id:, event_args: {})
+      {
+        conversion: {
+          id: id,
+          client_args: client_args,
+          event_args:  default_event_args.merge(event_args)
+        }
+      }
+    end
+
     private
 
     # default_args are sent with all `page` and `event` calls.
@@ -95,6 +111,18 @@ module Tracker::Handlers::GoogleAnalytics
       #     value    - String
       def event(name:, client_args:, event_args: {})
         client(client_args).event(event_args.merge(action: name))
+      end
+
+      # Accepts:
+      #   name        - String
+      #   client_args - Hash
+      #   event_args  - Hash, optional
+      #     category - String
+      #     action   - String
+      #     label    - String
+      #     value    - String
+      def conversion(id:, client_args:, event_args: {})
+        client(client_args).transaction(event_args.merge(transaction_id: id))
       end
 
       private

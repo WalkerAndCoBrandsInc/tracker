@@ -19,6 +19,10 @@ module App
         end
       end
 
+      map "/missing_implementation" do
+        run MetalController.action(:missing_implementation)
+      end
+
       run MetalController.action(:index)
     end
   end

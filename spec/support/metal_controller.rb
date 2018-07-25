@@ -13,4 +13,17 @@ class MetalController < ActionController::Metal
 
     render "metal/index"
   end
+
+  def missing_implementation
+    queue_tracker do |t|
+      nil
+    end
+    render "metal/index"
+  end
+
+  private
+
+  def env
+    request.env
+  end
 end

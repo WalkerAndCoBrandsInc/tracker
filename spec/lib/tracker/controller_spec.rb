@@ -72,5 +72,20 @@ RSpec.describe Tracker::Controller do
         Tracker::Background::Sidekiq.drain
       end
     end
+
+    describe 'queue args is missing' do
+      before do
+        allow_any_instance_of(Tracker::GoogleAnalytics::Queuer).to receive(:conversion)
+          .and_return(nil)
+      end
+
+      it 'skips queuing' do
+        expect(Tracker::GoogleAnalytics::Client).not_to receive(:conversion)
+
+        get "/missing_implementation"
+
+        Tracker::Background::Sidekiq.drain
+      end
+    end
   end
 end
