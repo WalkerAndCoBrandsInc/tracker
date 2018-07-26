@@ -19,6 +19,12 @@ describe "Base" do
     end.to raise_error(Tracker::Handlers::Base::NotImplemented)
   end
 
+  it "calling conversion raises error" do
+    expect do
+      base.conversion
+    end.to raise_error(Tracker::Handlers::Base::NotImplemented)
+  end
+
   describe "TestHandler" do
     class TestHandler < Tracker::Handlers::Base
       def page
@@ -27,6 +33,10 @@ describe "Base" do
 
       def event
         default_event_args
+      end
+
+      def conversion
+        default_conversion_args
       end
     end
 
@@ -61,6 +71,13 @@ describe "Base" do
         user_id:   1,
         host_name: "localhost:3000"
       })
+    end
+
+    it "returns default conversion args" do
+      expect(test_handler.conversion).to eq(
+        uuid:      "uuid",
+        user_id:   1,
+      )
     end
   end
 end

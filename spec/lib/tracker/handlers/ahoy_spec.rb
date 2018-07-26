@@ -17,6 +17,12 @@ describe "Ahoy" do
         event: { name: "event name", event_args: Hash }
       })
     end
+
+    it "builds conversion with given and default args" do
+      expect(queuer.conversion(id: 1, event_args: {a: 1})).to include({
+        event: { name: 'conversion', event_args: Hash }
+      })
+    end
   end
 
   describe "Client" do

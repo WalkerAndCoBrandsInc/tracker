@@ -36,6 +36,29 @@ describe "Amplitude" do
         }
       })
     end
+
+    it 'builds conversion with given and default args' do
+      args = {
+        revenue: 10,
+        shipping: 5,
+        tax: 1,
+        currency: 'USD'
+      }
+      expect(queuer.conversion(
+        id: 1,
+        event_args: args
+      )).to include({
+        track: {
+          api_key: 'api_key',
+          event_args: a_hash_including(
+            event_type: 'revenue',
+            event_properties: a_hash_including(
+              revenue: 10
+            )
+          )
+        }
+      })
+    end
   end
 
   describe "Client" do

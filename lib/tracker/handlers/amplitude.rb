@@ -37,17 +37,42 @@ module Tracker::Handlers::Amplitude
       }
     end
 
+    # Accepts:
+    #   id         - String
+    #   event_args - Hash, optional
+    #
+    # Returns:
+    #   Hash
+    def conversion(id:, event_args: {})
+      {
+        track: {
+          api_key:    api_key,
+          event_args: default_amplitude_args(event_args).merge(
+            event_type: 'revenue',
+            event_properties: {
+              revenue: event_args[:revenue]
+            }
+          )
+        }
+      }
+    end
+
     private
 
-    def build_event_args(name, args)
+    def default_amplitude_args(args={})
       {
         user_id:          args[:user_id] || user_id_from_session,
         device_id:        uuid,
-        event_type:       name,
-        event_properties: args,
         insert_id:        SecureRandom.base64,
         time:             DateTime.now.strftime('%Q')
       }
+    end
+
+    def build_event_args(name, args)
+      default_amplitude_args.merge(
+        event_type:       name,
+        event_properties: args,
+      )
     end
   end
 
