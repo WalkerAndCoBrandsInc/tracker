@@ -1,3 +1,5 @@
+require_relative './env_helpers'
+
 class UUIDSetter
   include EnvHelpers
 

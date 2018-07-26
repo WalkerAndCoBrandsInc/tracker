@@ -7,7 +7,7 @@ module EnvHelpers
       "HTTP_USER_AGENT"           => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6)",
       "REQUEST_URI"               => "/?utm_param=1&utm_param=2&utm_source=a",
       "QUERY_STRING"              => "utm_param=1&utm_param=2&utm_source=a",
-      "rack.request.query_hash"   => {utm_param:1, utm_param:2, utm_source:"a"},
+      "rack.request.query_hash"   => {utm_param:1, utm_source:"a"},
       "rack.request.query_string" => "?utm_param=1&utm_param=2&utm_source=a",
       "rack.input"                => ""
     }.merge(rack_session)

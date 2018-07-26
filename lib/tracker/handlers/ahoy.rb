@@ -22,6 +22,23 @@ module Tracker::Handlers::Ahoy
     def event(name:, event_args: {})
       { event: { name: name, event_args: default_event_args.merge(event_args) } }
     end
+
+    # Accepts:
+    #   id         - String
+    #   event_args - Hash, optional
+    #
+    # Returns:
+    #   Hash
+    def conversion(id:, event_args: {})
+      { event:
+        {
+          name: 'conversion',
+          event_args: default_conversion_args.merge(event_args).merge(
+            id: id
+          )
+        }
+      }
+    end
   end
 
   class Client

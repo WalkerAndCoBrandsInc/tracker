@@ -43,6 +43,26 @@ describe "GoogleAnalytics" do
         }
       })
     end
+
+
+    it 'builds conversion with given and default args' do
+      args = {
+        revenue: 10,
+        shipping: 5,
+        tax: 1,
+        currency: 'USD'
+      }
+      expect(queuer.conversion(
+        id: 1,
+        event_args: args
+      )).to include({
+        conversion: {
+          id: 1,
+          client_args: client_args,
+          event_args: a_hash_including(args)
+        }
+      })
+    end
   end
 
   describe "Client" do
@@ -83,6 +103,21 @@ describe "GoogleAnalytics" do
           name: "event name",
           event_args: {category: "category", label: "label", value: 1}
         )[:event]
+      )
+    end
+
+    it 'tracks a conversion with given params' do
+      expect_any_instance_of(Staccato::Tracker).to receive(:transaction).with(
+        a_hash_including(
+          transaction_id: 1
+        )
+      )
+
+      subject.conversion(
+        queuer.conversion(
+          id: 1,
+          event_args: {}
+        )[:conversion]
       )
     end
   end

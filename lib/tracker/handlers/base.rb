@@ -24,6 +24,10 @@ class Tracker::Handlers::Base
     raise NotImplemented
   end
 
+  def conversion(*args)
+    raise NotImplemented
+  end
+
   private
 
   def default_page_args
@@ -58,6 +62,10 @@ class Tracker::Handlers::Base
       user_id:   user_id_from_session,
       host_name: env["HTTP_HOST"]
     }
+  end
+
+  def default_conversion_args
+    default_args.except(:host_name)
   end
 
   def user_id_from_session

@@ -13,4 +13,10 @@ class MetalController < ActionController::Metal
 
     render "metal/index"
   end
+
+  private
+
+  def env
+    request.env
+  end
 end
