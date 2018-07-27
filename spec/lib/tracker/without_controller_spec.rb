@@ -11,7 +11,7 @@ RSpec.describe Tracker::WithoutController do
       expect(Tracker::Background::Sidekiq).to receive(:q).
         with(
           "Tracker::Handlers::GoogleAnalytics::Client",
-          page: hash_including(path: "/", page_args: hash_including(uuid: "uuid")\
+          page: hash_including(path: "/", page_args: hash_including(uuid: "uuid")
         )
       )
 

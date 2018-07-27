@@ -9,7 +9,7 @@ module EnvHelpers
       "QUERY_STRING"              => "utm_param=1&utm_param=2&utm_source=a",
       "rack.request.query_hash"   => {utm_param:1, utm_source:"a"},
       "rack.request.query_string" => "?utm_param=1&utm_param=2&utm_source=a",
-      "rack.input"                => ""
+      "rack.input"                => StringIO.new("")
     }.merge(rack_session)
   end
 
@@ -19,5 +19,10 @@ module EnvHelpers
 
   def uuid_fetcher
     proc { env[UUIDSetter::KEY] }
+  end
+
+  def env_with_request_params
+    request_params = StringIO.new( "user%5Bemail%5D=overwow%40wilding.com&user%5Bpassword%5D=olusegun")
+    env.merge!({ "REQUEST_METHOD" => "POST", "rack.input" => request_params})
   end
 end
