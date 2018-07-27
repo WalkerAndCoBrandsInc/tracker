@@ -63,6 +63,8 @@ class Tracker::Handlers::Base
     decoded_params[:user].delete(:password) if decoded_params[:user] && decoded_params[:user][:password].present?
 
     decoded_params
+  ensure
+    env['rack.input'].rewind if env.present?
   end
 
   def default_event_args
