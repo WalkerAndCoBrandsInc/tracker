@@ -63,7 +63,7 @@ module Tracker::Handlers::Amplitude
       {
         user_id:          args[:user_id] || user_id_from_session,
         device_id:        uuid,
-        insert_id:        SecureRandom.base64,
+        insert_id:        args[:insert_id] || SecureRandom.base64,
         time:             args[:time] || DateTime.now.strftime('%Q')
       }
     end
