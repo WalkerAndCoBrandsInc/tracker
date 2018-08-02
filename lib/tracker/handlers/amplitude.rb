@@ -32,7 +32,7 @@ module Tracker::Handlers::Amplitude
       {
         track: {
           api_key:    api_key,
-          event_args: build_event_args(name, default_event_args.merge(event_args))
+          event_args: build_event_args(name, event_args)
         }
       }
     end
@@ -64,12 +64,12 @@ module Tracker::Handlers::Amplitude
         user_id:          args[:user_id] || user_id_from_session,
         device_id:        uuid,
         insert_id:        SecureRandom.base64,
-        time:             DateTime.now.strftime('%Q')
+        time:             args[:time] || DateTime.now.strftime('%Q')
       }
     end
 
     def build_event_args(name, args)
-      default_amplitude_args.merge(
+      default_amplitude_args(args).merge(
         event_type:       name,
         event_properties: args,
       )

@@ -1,6 +1,8 @@
 require_relative './env_helpers'
 
 class UUIDSetter
+  include EnvHelpers
+
   KEY   = "UUID".freeze
   VALUE = "uuid".freeze
 
