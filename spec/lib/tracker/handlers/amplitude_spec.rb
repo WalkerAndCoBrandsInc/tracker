@@ -47,6 +47,19 @@ describe "Amplitude" do
       })
     end
 
+    it "builds event with given time arg" do
+      expect(queuer.event(name: "event name", event_args: {time: 1})).to include({
+        track: {
+          api_key: "api_key",
+          event_args: hash_including(
+            event_type: "event name",
+            event_properties: Hash,
+            time: 1
+          )
+        }
+      })
+    end
+
     it 'builds conversion with given and default args' do
       args = {
         revenue: 10,
