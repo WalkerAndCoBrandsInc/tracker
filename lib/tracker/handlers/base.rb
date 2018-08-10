@@ -59,10 +59,17 @@ class Tracker::Handlers::Base
 
     rack_input = env['rack.input'].read
 
-    decoded_params = Rack::Utils.parse_nested_query(rack_input).deep_symbolize_keys
-    decoded_params[:user].delete(:password) if decoded_params[:user] && decoded_params[:user][:password].present?
+    # This https://github.com/rack/rack/issues/337 happens with Stripe webhooks
+    # where there's '%' sign in params. Since it's request params, we're simply
+    # ignoring the params when this happens.
+    begin
+      decoded_params = Rack::Utils.parse_nested_query(rack_input).deep_symbolize_keys
+      decoded_params[:user].delete(:password) if decoded_params[:user] && decoded_params[:user][:password].present?
+      return decoded_params
+    rescue
+    end
 
-    decoded_params
+    return {}
   ensure
     env['rack.input'].rewind if env.present?
   end
