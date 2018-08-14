@@ -37,6 +37,9 @@ config.middleware.use(Tracker::Middleware) do
   uuid do |env|
     env["UUID"]
   end
+
+  # specify paths to be ignored by page tracker
+  ignore_paths ["/path", "/path/with-matcher/*", "/path/*/matchers"]
 end
 
 # in a controller
