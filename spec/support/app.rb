@@ -4,6 +4,7 @@ module App
       map "/404" do
         run Proc.new { |env| [404, {}, []] }
       end
+
       use UUIDSetter
       use Tracker::Middleware do
         handler(

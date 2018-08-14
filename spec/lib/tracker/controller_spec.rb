@@ -45,6 +45,44 @@ RSpec.describe Tracker::Controller do
         header "ACCEPT", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
         get "/404"
       end
+
+      context 'when has ignored paths' do
+        def app
+          Rack::Builder.new do
+            use UUIDSetter
+            use Tracker::Middleware do
+              uuid do |env|
+                env[UUIDSetter::KEY]
+              end
+
+              ignore_paths ['/ignored', '/ignored/*/paths']
+            end
+
+            run MetalController.action(:index)
+          end
+        end
+
+        it 'does not track' do
+          expect_any_instance_of(Tracker::PageTrack).
+            to_not receive(:track)
+          header "ACCEPT", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
+          get "/ignored"
+        end
+
+        it 'supports matchers' do
+          expect_any_instance_of(Tracker::PageTrack).
+            to_not receive(:track)
+          header "ACCEPT", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
+          get "/ignored/other/paths"
+        end
+
+        it 'tracks if not ignored' do
+          expect_any_instance_of(Tracker::PageTrack).
+            to receive(:track)
+          header "ACCEPT", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
+          get "/ignored/this-will-track/successfuly"
+        end
+      end
     end
 
     context "controller" do

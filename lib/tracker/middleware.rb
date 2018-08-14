@@ -15,6 +15,7 @@ module Tracker
     def initialize(app, &block)
       @app      = app
       @handlers = []
+      @ignore_paths = []
 
       instance_exec(&block) if block_given?
 
@@ -43,13 +44,33 @@ module Tracker
       @uuid_fetcher = blk
     end
 
+    def ignore_paths(paths=[])
+      return @ignore_paths unless paths.any?
+      @ignore_paths = paths
+    end
+
     private
 
     def track_page(env)
       Tracker::PageTrack.new(env).track
     end
 
+    def matchers_ignore_paths
+      @matchers_ignore_paths ||= @ignore_paths.map do |p|
+        parsed = p.gsub('*','.*').gsub('/', '\/')
+        Regexp.new("^#{parsed}$")
+      end
+    end
+
+    def path_in_ignore_paths?(path)
+      return false unless @ignore_paths.any?
+      return true if @ignore_paths.any? { |m| m.match(path) }
+      return true if matchers_ignore_paths.any? { |m| m.match(path) }
+      false
+    end
+
     def should_track?(status, env)
+      return false if path_in_ignore_paths?(env["PATH_INFO"])
       return false if IGNORE_STATUS.include?(status)
       return false if env["HTTP_ACCEPT"] && !env["HTTP_ACCEPT"].include?(HTTP_ACCEPT_HTML)
       return false if DeviceDetector.new(env["HTTP_USER_AGENT"]).bot?
