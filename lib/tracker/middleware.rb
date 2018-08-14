@@ -58,7 +58,11 @@ module Tracker
     def matchers_ignore_paths
       @matchers_ignore_paths ||= @ignore_paths.map do |p|
         parsed = p.gsub('*','.*').gsub('/', '\/')
-        Regexp.new("^#{parsed}$")
+        if parsed[-2..-1] == '.*'
+          Regexp.new("^#{parsed}")
+        else
+          Regexp.new("^#{parsed}$")
+        end
       end
     end
 
@@ -70,7 +74,7 @@ module Tracker
     end
 
     def should_track?(status, env)
-      return false if path_in_ignore_paths?(env["PATH_INFO"])
+      return false if path_in_ignore_paths?(env["REQUEST_PATH"] || env["PATH_INFO"])
       return false if IGNORE_STATUS.include?(status)
       return false if env["HTTP_ACCEPT"] && !env["HTTP_ACCEPT"].include?(HTTP_ACCEPT_HTML)
       return false if DeviceDetector.new(env["HTTP_USER_AGENT"]).bot?
