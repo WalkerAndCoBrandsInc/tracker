@@ -82,6 +82,13 @@ RSpec.describe Tracker::Controller do
           header "ACCEPT", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
           get "/ignored/this-will-track/successfuly"
         end
+
+        it 'tracks home' do
+          expect_any_instance_of(Tracker::PageTrack).
+            to receive(:track)
+          header "ACCEPT", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
+          get "/"
+        end
       end
     end
 

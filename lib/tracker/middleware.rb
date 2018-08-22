@@ -68,7 +68,6 @@ module Tracker
 
     def path_in_ignore_paths?(path)
       return false unless @ignore_paths.any?
-      return true if @ignore_paths.any? { |m| m.match(path) }
       return true if matchers_ignore_paths.any? { |m| m.match(path) }
       false
     end
