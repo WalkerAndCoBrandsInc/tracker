@@ -18,6 +18,10 @@ module App
         uuid do |env|
           env[UUIDSetter::KEY]
         end
+
+        session do |env|
+          1
+        end
       end
 
       run MetalController.action(:index)

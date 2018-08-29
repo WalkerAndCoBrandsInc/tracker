@@ -49,6 +49,11 @@ module Tracker
       @ignore_paths = paths
     end
 
+    def session(&blk)
+      return @session_fetcher if blk.nil?
+      @session_fetcher = blk
+    end
+
     private
 
     def track_page(env)

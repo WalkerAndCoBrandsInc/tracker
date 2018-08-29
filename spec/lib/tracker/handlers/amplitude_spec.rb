@@ -3,7 +3,10 @@ require "spec_helper"
 describe "Amplitude" do
   let(:queuer) do
     Tracker::Handlers::Amplitude::Queuer.new(
-      api_key: "api_key", env: env, uuid_fetcher: uuid_fetcher
+      api_key: "api_key",
+      env: env,
+      uuid_fetcher: uuid_fetcher,
+      session_fetcher: session_fetcher
     )
   end
 
@@ -18,6 +21,8 @@ describe "Amplitude" do
   end
 
   let(:api_key) { "api_key" }
+
+  let(:session_fetcher) { -> proc {} }
 
   describe "Queuer" do
     it "builds pageview with given and default args" do
@@ -109,6 +114,21 @@ describe "Amplitude" do
               event_properties: hash_including(path: "/sessions", user: {email: "overwow@wilding.com"})
             )
            }
+        })
+      end
+    end
+
+    context 'with session' do
+      let(:session_fetcher) { -> proc { 1 } }
+
+      it "builds args with session_id" do
+        expect(queuer.page(path: "/")).to include({
+          track: {
+            api_key:    "api_key",
+            event_args: hash_including(
+              session_id: 1
+            )
+          }
         })
       end
     end

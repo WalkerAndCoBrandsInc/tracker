@@ -7,7 +7,13 @@ module Tracker::Controller
         t.queuer.q(
           handler.client_class.to_s,
           blk.call(
-            handler.queuer_class.new(handler.opts.merge(env: env, uuid_fetcher: t.uuid))
+            handler.queuer_class.new(
+              handler.opts.merge(
+                env: env,
+                uuid_fetcher: t.uuid,
+                session_fetcher: t.session
+              )
+            )
           )
         )
       end
