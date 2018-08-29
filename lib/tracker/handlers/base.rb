@@ -3,17 +3,18 @@ require "uri"
 class Tracker::Handlers::Base
   class NotImplemented < StandardError; end
 
-  attr_reader :api_key, :env, :uuid
+  attr_reader :api_key, :env, :uuid, :session
 
   # Accepts:
   #   api_key      - String
   #   env          - Hash
   #   uuid_fetcher - Proc, should return String/int UUID of user.
   #   uuid         - String (Optional)
-  def initialize(api_key:"", env: , uuid_fetcher: -> proc {}, uuid: nil)
+  def initialize(api_key:"", env: , uuid_fetcher: -> proc {}, uuid: nil, session_fetcher: -> proc {}, session: nil)
     @api_key = api_key
     @env     = env
     @uuid    = uuid || uuid_fetcher.call(env)
+    @session = session || session_fetcher.call(env)
     env['rack.input'].rewind if env.present?
   end
 

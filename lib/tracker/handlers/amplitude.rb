@@ -65,7 +65,9 @@ module Tracker::Handlers::Amplitude
         device_id:        uuid,
         insert_id:        args[:insert_id] || SecureRandom.base64,
         time:             args[:time] || DateTime.now.strftime('%Q')
-      }
+      }.tap do |hash|
+        hash[:session_id] = (args[:session_id] || session) if (args[:session_id] || session)
+      end
     end
 
     def build_event_args(name, args)

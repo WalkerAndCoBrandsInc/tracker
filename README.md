@@ -40,6 +40,12 @@ config.middleware.use(Tracker::Middleware) do
 
   # specify paths to be ignored by page tracker
   ignore_paths ["/path", "/path/with-matcher/*", "/path/*/matchers"]
+
+  # specify how to get the session; this is implemented in Amplitude
+  # in order to determine user session time length
+  session do |env|
+    env["SOME_SESSION_VALUE"]
+  end
 end
 
 # in a controller
