@@ -16,6 +16,7 @@ require "tracker/background/sidekiq"
 require "tracker/handlers/ahoy"
 require "tracker/handlers/google_analytics"
 require "tracker/handlers/amplitude"
+require "tracker/handlers/postie"
 
 # Required to make Ahoy work in non Rails env
 class Ahoy::Store < Ahoy::Stores::LogStore
