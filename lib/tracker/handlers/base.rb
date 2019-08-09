@@ -91,7 +91,38 @@ class Tracker::Handlers::Base
     default_args.except(:host_name)
   end
 
+  # Session information for spree is set up differently
   def user_id_from_session
-    env["rack.session"]["user_id"] if env["rack.session"]
+    # > env["rack.session"]
+    # => {
+    #     "_csrf_token" => "securekey",
+    #     "csrf" => "securekey",
+    #     "session_id" => "securekey",
+    #     "tracking" => {
+    #         "HTTP_USER_AGENT" => "securekey"
+    #     },
+    #     "warden.user.spree_user.key" => [
+    #         [0] [
+    #         [0] 1
+    # ],
+    #     [1] "as_HVJM4J1K-QYYy_S2W"
+    # ]
+    # }
+
+    return unless rack_session && warden_key && warden_ids
+    warden_ids.first
+  end
+
+  def rack_session
+    env["rack.session"]
+  end
+
+  def warden_key
+    # this is nil if not logged in
+    rack_session["warden.user.spree_user.key"]
+  end
+
+  def warden_ids
+    warden_key.first
   end
 end
