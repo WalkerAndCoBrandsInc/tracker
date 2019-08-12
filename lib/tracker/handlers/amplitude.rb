@@ -59,15 +59,22 @@ module Tracker::Handlers::Amplitude
 
     private
 
+    # We need to get the session id from env
+    #   session is nil here in spree
     def default_amplitude_args(args={})
       {
-        user_id:          args[:user_id] || user_id_from_session,
-        device_id:        uuid,
-        insert_id:        args[:insert_id] || SecureRandom.base64,
-        time:             args[:time] || DateTime.now.strftime('%Q')
+        user_id:   args[:user_id] || user_id_from_session,
+        device_id: uuid,
+        insert_id: args[:insert_id] || SecureRandom.base64,
+        time:      args[:time] || DateTime.now.strftime('%Q')
       }.tap do |hash|
-        hash[:session_id] = (args[:session_id] || session) if (args[:session_id] || session)
+        hash[:session_id] = args[:session_id] || fetch_session_id
       end
+    end
+
+    def fetch_session_id
+      return unless env["rack.session"]
+      env["rack.session"]["session_id"]
     end
 
     def build_event_args(name, args)
